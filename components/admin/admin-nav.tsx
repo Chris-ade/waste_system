@@ -8,7 +8,6 @@ import {
   MapPin,
   Calendar,
   Users,
-  Home,
   Trash2,
   Menu,
   X,
@@ -26,7 +25,11 @@ const navItems = [
   { href: "/admin/crew", label: "Sanitation Crew", icon: Users },
 ];
 
-export function AdminNav({ user }: { user: { name: string; email: string; role: string } }) {
+export function AdminNav({
+  user,
+}: {
+  user: { name: string; email: string; role: string };
+}) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -34,16 +37,28 @@ export function AdminNav({ user }: { user: { name: string; email: string; role: 
     <>
       {/* Mobile top bar */}
       <header className="lg:hidden w-full shrink-0 flex items-center justify-between px-4 py-3 border-b bg-card sticky top-0 z-30 shadow-xs">
-        <Link href="/admin" className="flex items-center gap-2.5 font-bold text-sm">
+        <Link
+          href="/admin"
+          className="flex items-center gap-2.5 font-bold text-sm"
+        >
           <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-xs">
             <Trash2 className="size-4" />
           </div>
           <div className="flex flex-col">
-            <span className="leading-tight">Ikere<span className="text-emerald-600">Waste</span></span>
-            <span className="text-[10px] text-muted-foreground font-normal">Admin</span>
+            <span className="leading-tight">
+              Ikere<span className="text-emerald-600">Waste</span>
+            </span>
+            <span className="text-[10px] text-muted-foreground font-normal">
+              Admin
+            </span>
           </div>
         </Link>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setMobileOpen(!mobileOpen)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 w-8 p-0"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
           {mobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
         </Button>
       </header>
@@ -59,7 +74,12 @@ export function AdminNav({ user }: { user: { name: string; email: string; role: 
                 </div>
                 <span>Ikere Waste Admin</span>
               </div>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setMobileOpen(false)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={() => setMobileOpen(false)}
+              >
                 <X className="size-5" />
               </Button>
             </div>
@@ -92,8 +112,12 @@ export function AdminNav({ user }: { user: { name: string; email: string; role: 
                 {user.name ? user.name[0] : "A"}
               </div>
               <div className="text-xs truncate">
-                <span className="font-semibold block truncate">{user.name}</span>
-                <span className="text-muted-foreground truncate">{user.email}</span>
+                <span className="font-semibold block truncate">
+                  {user.name}
+                </span>
+                <span className="text-muted-foreground truncate">
+                  {user.email}
+                </span>
               </div>
             </div>
             <div className="pt-1">
@@ -113,13 +137,20 @@ export function AdminNav({ user }: { user: { name: string; email: string; role: 
         <div className="space-y-6">
           {/* Logo */}
           <div className="flex items-center justify-between px-2 pt-2">
-            <Link href="/admin" className="flex items-center gap-2.5 font-bold text-base tracking-tight">
+            <Link
+              href="/admin"
+              className="flex items-center gap-2.5 font-bold text-base tracking-tight"
+            >
               <div className="flex size-8 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
                 <Trash2 className="size-4" />
               </div>
               <div className="flex flex-col">
-                <span className="leading-tight">Ikere<span className="text-emerald-600">Waste</span></span>
-                <span className="text-[10px] text-muted-foreground font-normal">Administration Console</span>
+                <span className="leading-tight">
+                  Ikere<span className="text-emerald-600">Waste</span>
+                </span>
+                <span className="text-[10px] text-muted-foreground font-normal">
+                  Administration Console
+                </span>
               </div>
             </Link>
           </div>
@@ -152,27 +183,26 @@ export function AdminNav({ user }: { user: { name: string; email: string; role: 
 
         {/* User Card & Logout */}
         <div className="space-y-3 pt-4 border-t">
-          <div className="flex items-center justify-between p-2 rounded-xl bg-muted/40 border text-xs">
+          <Badge
+            variant="outline"
+            className="text-[11px] p-2 h-4 border-emerald-600/30 text-emerald-700"
+          >
+            {user.role}
+          </Badge>
+          <div className="flex items-center justify-between p-2 text-xs">
             <div className="flex items-center gap-2 truncate">
               <div className="size-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
                 {user.name ? user.name[0] : "A"}
               </div>
               <div className="truncate text-left">
-                <span className="font-semibold block truncate text-[11px]">{user.name}</span>
-                <Badge variant="outline" className="text-[9px] px-1 py-0 h-4 border-emerald-600/30 text-emerald-700">
-                  {user.role}
-                </Badge>
+                <span className="font-semibold block truncate text-[12px]">
+                  {user.name}
+                </span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <Button asChild variant="ghost" size="sm" className="w-full text-[11px] justify-start text-muted-foreground">
-              <Link href="/">
-                <Home className="size-3.5 mr-1.5" />
-                Public Site
-              </Link>
-            </Button>
             <div className="shrink-0">
               <LogoutButton
                 variant="ghost"

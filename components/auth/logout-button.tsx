@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Loader2, AlertCircle } from "lucide-react";
+import { LogOut, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   ResponsiveDialog,
@@ -38,11 +38,11 @@ export function LogoutButton({
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       setOpen(false);
-      window.location.href = "/login";
+      router.push("/login");
     } catch (err) {
       console.error("Logout error:", err);
       setLoading(false);
-      window.location.href = "/login";
+      router.push("/login");
     }
   };
 
@@ -64,13 +64,11 @@ export function LogoutButton({
       <ResponsiveDialogContent className="sm:max-w-md">
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle className="flex items-center gap-2 text-foreground">
-            <div className="size-8 rounded-full bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
-              <LogOut className="size-4" />
-            </div>
             Confirm Sign Out
           </ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
-            Are you sure you want to end your session? You will be redirected to the login page.
+          <ResponsiveDialogDescription className="text-sm text-muted-foreground">
+            Are you sure you want to end your session? You will be redirected to
+            the login page.
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
 
@@ -97,7 +95,7 @@ export function LogoutButton({
             ) : (
               <LogOut className="size-3.5" />
             )}
-            {loading ? "Signing Out..." : "Confirm Sign Out"}
+            {loading ? "Signing Out..." : "Sign Out"}
           </Button>
         </ResponsiveDialogFooter>
       </ResponsiveDialogContent>
