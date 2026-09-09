@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   Edit,
   Loader2,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -92,7 +91,9 @@ export function ReportsClient({
 
   // Selected report for modal details/actions
   const [activeReport, setActiveReport] = useState<WasteReport | null>(null);
-  const [newStatus, setNewStatus] = useState<"PENDING" | "ASSIGNED" | "RESOLVED">("PENDING");
+  const [newStatus, setNewStatus] = useState<
+    "PENDING" | "ASSIGNED" | "RESOLVED"
+  >("PENDING");
   const [assignedCrewId, setAssignedCrewId] = useState<string>("NONE");
   const [notes, setNotes] = useState<string>("");
   const [saving, setSaving] = useState(false);
@@ -101,7 +102,10 @@ export function ReportsClient({
   const crewItemsMap: Record<string, string> = {
     NONE: "-- Unassigned --",
     ...Object.fromEntries(
-      crewMembers.map((c) => [c.id, `${c.name}${c.phone ? ` (${c.phone})` : ""}`])
+      crewMembers.map((c) => [
+        c.id,
+        `${c.name}${c.phone ? ` (${c.phone})` : ""}`,
+      ]),
     ),
   };
 
@@ -137,7 +141,7 @@ export function ReportsClient({
       }
 
       setReports((prev) =>
-        prev.map((r) => (r.id === activeReport.id ? data.report : r))
+        prev.map((r) => (r.id === activeReport.id ? data.report : r)),
       );
       setActiveReport(data.report);
       setMessage("Report updated successfully!");
@@ -167,7 +171,8 @@ export function ReportsClient({
   };
 
   const filteredReports = reports.filter((r) => {
-    const quarterMatch = selectedQuarter === "ALL" || r.quarter === selectedQuarter;
+    const quarterMatch =
+      selectedQuarter === "ALL" || r.quarter === selectedQuarter;
     const statusMatch = selectedStatus === "ALL" || r.status === selectedStatus;
     const searchMatch =
       !search ||
@@ -252,13 +257,19 @@ export function ReportsClient({
             <tbody className="divide-y">
               {filteredReports.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-muted-foreground">
+                  <td
+                    colSpan={7}
+                    className="p-8 text-center text-muted-foreground"
+                  >
                     No reports found matching your criteria.
                   </td>
                 </tr>
               ) : (
                 filteredReports.map((report) => (
-                  <tr key={report.id} className="hover:bg-muted/10 transition-colors">
+                  <tr
+                    key={report.id}
+                    className="hover:bg-muted/10 transition-colors"
+                  >
                     <td className="p-3.5">
                       <div className="flex items-center gap-2.5">
                         {report.imageUrl ? (
@@ -273,7 +284,9 @@ export function ReportsClient({
                           </div>
                         )}
                         <div className="truncate max-w-[180px]">
-                          <span className="font-semibold block truncate">{report.category}</span>
+                          <span className="font-semibold block truncate">
+                            {report.category}
+                          </span>
                           <span className="text-[10px] text-muted-foreground font-mono">
                             ID: {report.id.slice(0, 8)}...
                           </span>
@@ -283,7 +296,9 @@ export function ReportsClient({
 
                     <td className="p-3.5">
                       <div className="space-y-0.5">
-                        <span className="font-medium block">{report.quarter.replace("_", " ")}</span>
+                        <span className="font-medium block">
+                          {report.quarter.replace("_", " ")}
+                        </span>
                         <span className="text-[11px] text-muted-foreground truncate max-w-[180px] block">
                           {report.address || "Coordinates pinned"}
                         </span>
@@ -292,19 +307,27 @@ export function ReportsClient({
 
                     <td className="p-3.5">
                       <div>
-                        <span className="font-medium block">{report.user?.name || "Anonymous / Guest"}</span>
-                        <span className="text-[11px] text-muted-foreground">{report.user?.phone || "No phone"}</span>
+                        <span className="font-medium block">
+                          {report.user?.name || "Anonymous"}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {report.user?.phone || "No phone"}
+                        </span>
                       </div>
                     </td>
 
                     <td className="p-3.5">
                       {report.crewAssigned ? (
-                        <div className="flex items-center gap-1.5 text-blue-600 font-medium">
+                        <div className="flex items-center gap-1.5 font-medium">
                           <Truck className="size-3.5 shrink-0" />
-                          <span className="truncate max-w-[140px]">{report.crewAssigned.name}</span>
+                          <span className="truncate max-w-[140px]">
+                            {report.crewAssigned.name}
+                          </span>
                         </div>
                       ) : (
-                        <span className="text-muted-foreground text-[11px]">Unassigned</span>
+                        <span className="text-muted-foreground text-[11px]">
+                          Unassigned
+                        </span>
                       )}
                     </td>
 
@@ -315,8 +338,8 @@ export function ReportsClient({
                           report.status === "RESOLVED"
                             ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
                             : report.status === "ASSIGNED"
-                            ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
-                            : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                              ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                              : "bg-amber-500/10 text-amber-600 border-amber-500/20"
                         }`}
                       >
                         {report.status}
@@ -327,25 +350,27 @@ export function ReportsClient({
                       {new Date(report.createdAt).toLocaleDateString()}
                     </td>
 
-                    <td className="p-3.5 text-right space-x-1">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="h-7 text-xs px-2.5"
-                        onClick={() => openActionModal(report)}
-                      >
-                        <Edit className="size-3 mr-1" />
-                        Manage
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 text-xs px-2 text-destructive hover:bg-destructive/10"
-                        onClick={() => handleDelete(report.id)}
-                        title="Delete report"
-                      >
-                        <Trash2 className="size-3" />
-                      </Button>
+                    <td className="p-3.5 space-x-1">
+                      <div className="flex gap-1.5 justify-end w-full">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs px-2.5"
+                          onClick={() => openActionModal(report)}
+                        >
+                          <Edit className="size-3 mr-1" />
+                          Manage
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 text-xs px-2 text-destructive hover:bg-destructive/10"
+                          onClick={() => handleDelete(report.id)}
+                          title="Delete report"
+                        >
+                          <Trash2 className="size-3" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -391,23 +416,38 @@ export function ReportsClient({
               {/* Incident Info summary */}
               <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-muted/30 border">
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Category</span>
-                  <span className="font-semibold text-sm">{activeReport.category}</span>
+                  <span className="text-muted-foreground block text-[11px]">
+                    Category
+                  </span>
+                  <span className="font-semibold text-sm">
+                    {activeReport.category}
+                  </span>
                 </div>
                 <div>
-                  <span className="text-muted-foreground block text-[11px]">Quarter</span>
-                  <span className="font-semibold text-sm">{activeReport.quarter.replace("_", " ")}</span>
+                  <span className="text-muted-foreground block text-[11px]">
+                    Quarter
+                  </span>
+                  <span className="font-semibold text-sm">
+                    {activeReport.quarter.replace("_", " ")}
+                  </span>
                 </div>
                 <div className="col-span-2">
-                  <span className="text-muted-foreground block text-[11px]">Landmark / Coordinates</span>
+                  <span className="text-muted-foreground block text-[11px]">
+                    Landmark / Coordinates
+                  </span>
                   <span className="font-medium">
-                    {activeReport.address || "No address"} ({activeReport.latitude}, {activeReport.longitude})
+                    {activeReport.address || "No address"} (
+                    {activeReport.latitude}, {activeReport.longitude})
                   </span>
                 </div>
                 {activeReport.description && (
                   <div className="col-span-2">
-                    <span className="text-muted-foreground block text-[11px]">Description</span>
-                    <p className="mt-0.5 text-muted-foreground">{activeReport.description}</p>
+                    <span className="text-muted-foreground block text-[11px]">
+                      Description
+                    </span>
+                    <p className="mt-0.5 text-muted-foreground">
+                      {activeReport.description}
+                    </p>
                   </div>
                 )}
               </div>
@@ -415,13 +455,18 @@ export function ReportsClient({
               {/* Action Form */}
               <div className="space-y-3 pt-2">
                 <div className="space-y-1">
-                  <Label htmlFor="status-select" className="text-xs">Update Operational Status</Label>
+                  <Label htmlFor="status-select" className="text-xs">
+                    Update Operational Status
+                  </Label>
                   <Select
                     items={modalStatusItems}
                     value={newStatus}
                     onValueChange={(val) => val && setNewStatus(val as any)}
                   >
-                    <SelectTrigger id="status-select" className="w-full text-xs h-9">
+                    <SelectTrigger
+                      id="status-select"
+                      className="w-full text-xs h-9"
+                    >
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -435,7 +480,9 @@ export function ReportsClient({
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor="crew-select" className="text-xs">Assign Collection Crew</Label>
+                  <Label htmlFor="crew-select" className="text-xs">
+                    Assign Collection Crew
+                  </Label>
                   <Select
                     items={crewItemsMap}
                     value={assignedCrewId}
@@ -448,7 +495,10 @@ export function ReportsClient({
                       }
                     }}
                   >
-                    <SelectTrigger id="crew-select" className="w-full text-xs h-9">
+                    <SelectTrigger
+                      id="crew-select"
+                      className="w-full text-xs h-9"
+                    >
                       <SelectValue placeholder="Assign Crew" />
                     </SelectTrigger>
                     <SelectContent>
@@ -462,7 +512,9 @@ export function ReportsClient({
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor="admin-notes" className="text-xs">Admin / Dispatch Notes</Label>
+                  <Label htmlFor="admin-notes" className="text-xs">
+                    Admin / Dispatch Notes
+                  </Label>
                   <Textarea
                     id="admin-notes"
                     placeholder="e.g. Scheduled for Wednesday evacuation; vehicle #4 assigned."
@@ -477,7 +529,11 @@ export function ReportsClient({
           )}
 
           <ResponsiveDialogFooter className="flex items-center justify-between border-t pt-3">
-            <Button variant="outline" size="sm" onClick={() => setActiveReport(null)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setActiveReport(null)}
+            >
               Close
             </Button>
             <Button
@@ -486,7 +542,9 @@ export function ReportsClient({
               disabled={saving}
               className="bg-emerald-600 hover:bg-emerald-700 text-white"
             >
-              {saving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : null}
+              {saving ? (
+                <Loader2 className="size-3.5 animate-spin mr-1.5" />
+              ) : null}
               {saving ? "Saving Changes..." : "Save Changes"}
             </Button>
           </ResponsiveDialogFooter>

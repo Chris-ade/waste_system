@@ -1,18 +1,5 @@
 import Link from "next/link";
-import {
-  Trash2,
-  MapPin,
-  Calendar,
-  Camera,
-  CheckCircle2,
-  Clock,
-  ShieldCheck,
-  ArrowRight,
-  Truck,
-  Users,
-  AlertTriangle,
-  Building2,
-} from "lucide-react";
+import { Trash2, MapPin, Calendar, Camera, Clock, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,

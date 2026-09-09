@@ -121,7 +121,7 @@ export default async function AdminOverviewPage() {
               <CardDescription className="text-xs">
                 Total Incidents Reported
               </CardDescription>
-              <div className="size-7 rounded-lg bg-muted flex items-center justify-center text-muted-foreground">
+              <div className="size-7 flex items-center justify-center text-muted-foreground">
                 <FileSpreadsheet className="size-4" />
               </div>
             </div>
@@ -138,11 +138,11 @@ export default async function AdminOverviewPage() {
               <CardDescription className="text-xs">
                 Pending Dispatch
               </CardDescription>
-              <div className="size-7 rounded-lg bg-amber-500/10 text-amber-600 flex items-center justify-center">
+              <div className="size-7 flex items-center justify-center">
                 <AlertCircle className="size-4" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-amber-600">
+            <CardTitle className="text-2xl font-bold">
               {pendingReports}
             </CardTitle>
           </CardHeader>
@@ -157,11 +157,11 @@ export default async function AdminOverviewPage() {
               <CardDescription className="text-xs">
                 Active Crew Dispatches
               </CardDescription>
-              <div className="size-7 rounded-lg bg-blue-500/10 text-blue-600 flex items-center justify-center">
+              <div className="size-7 rounded-lg flex items-center justify-center">
                 <Truck className="size-4" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-blue-600">
+            <CardTitle className="text-2xl font-bold">
               {assignedReports}
             </CardTitle>
           </CardHeader>
@@ -176,7 +176,7 @@ export default async function AdminOverviewPage() {
               <CardDescription className="text-xs">
                 Resolution Rate
               </CardDescription>
-              <div className="size-7 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center">
+              <div className="size-7 flex items-center justify-center">
                 <CheckCircle2 className="size-4" />
               </div>
             </div>
