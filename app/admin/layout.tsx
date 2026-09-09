@@ -21,7 +21,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-muted/20">
       <AdminNav
         user={{
           name: session.name,

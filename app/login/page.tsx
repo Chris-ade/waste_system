@@ -3,12 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Trash2, Loader2, KeyRound, AlertCircle, ArrowRight } from "lucide-react";
+import { Trash2, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,7 +38,9 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Failed to sign in. Please check your credentials.");
+        setError(
+          data.error || "Failed to sign in. Please check your credentials.",
+        );
         setLoading(false);
         return;
       }
@@ -67,7 +75,10 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 bg-muted/20">
       <div className="w-full max-w-md space-y-4">
         <div className="flex flex-col items-center text-center space-y-1">
-          <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-tight mb-2">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold text-xl tracking-tight mb-2"
+          >
             <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
               <Trash2 className="size-5" />
             </div>
@@ -76,7 +87,9 @@ export default function LoginPage() {
             </span>
           </Link>
           <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
-          <p className="text-xs text-muted-foreground">Sign in to manage reports, schedules, and municipal operations</p>
+          <p className="text-xs text-muted-foreground">
+            Sign in to manage reports, schedules, and municipal operations
+          </p>
         </div>
 
         <Card className="border shadow-xs">
@@ -97,7 +110,9 @@ export default function LoginPage() {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs">Email Address</Label>
+                <Label htmlFor="email" className="text-xs">
+                  Email Address
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -111,7 +126,9 @@ export default function LoginPage() {
 
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-xs">Password</Label>
+                  <Label htmlFor="password" className="text-xs">
+                    Password
+                  </Label>
                 </div>
                 <Input
                   id="password"
@@ -128,7 +145,9 @@ export default function LoginPage() {
                 disabled={loading}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
               >
-                {loading ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+                {loading ? (
+                  <Loader2 className="size-4 animate-spin mr-2" />
+                ) : null}
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
             </CardContent>
@@ -136,7 +155,10 @@ export default function LoginPage() {
             <CardFooter className="flex flex-col gap-3 pt-0 border-t bg-muted/30 p-4">
               <div className="text-xs text-center text-muted-foreground">
                 Don&apos;t have an account?{" "}
-                <Link href="/register" className="text-emerald-600 hover:underline font-semibold">
+                <Link
+                  href="/register"
+                  className="text-emerald-600 hover:underline font-semibold"
+                >
                   Register as Resident
                 </Link>
               </div>

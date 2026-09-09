@@ -8,6 +8,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const quarterItems: Record<string, string> = {
+  URO: "Uro Quarter",
+  OKE_OSUN: "Oke-Osun Quarter",
+  ODO_OJA: "Odo-Oja Quarter",
+  OGBONTIORO: "Ogbontioro Quarter",
+  OLOWO_IJESA: "Olowo-Ijesa Quarter",
+};
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -120,18 +135,22 @@ export default function RegisterPage() {
 
               <div className="space-y-1">
                 <Label htmlFor="quarter" className="text-xs">Ikere-Ekiti Quarter</Label>
-                <select
-                  id="quarter"
+                <Select
+                  items={quarterItems}
                   value={quarter}
-                  onChange={(e) => setQuarter(e.target.value)}
-                  className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus:outline-hidden"
+                  onValueChange={(val) => val && setQuarter(val)}
                 >
-                  <option value="URO">Uro Quarter</option>
-                  <option value="OKE_OSUN">Oke-Osun Quarter</option>
-                  <option value="ODO_OJA">Odo-Oja Quarter</option>
-                  <option value="OGBONTIORO">Ogbontioro Quarter</option>
-                  <option value="OLOWO_IJESA">Olowo-Ijesa Quarter</option>
-                </select>
+                  <SelectTrigger id="quarter" className="w-full text-sm">
+                    <SelectValue placeholder="Select Quarter" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(quarterItems).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-1">

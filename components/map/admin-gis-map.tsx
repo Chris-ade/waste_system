@@ -3,6 +3,13 @@
 import { useEffect, useState } from "react";
 import { Loader2, Layers, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Report {
   id: string;
@@ -22,6 +29,22 @@ interface AdminGisMapProps {
   height?: string;
   onSelectReport?: (reportId: string) => void;
 }
+
+const quarterItems: Record<string, string> = {
+  ALL: "All Quarters",
+  URO: "Uro",
+  OKE_OSUN: "Oke-Osun",
+  ODO_OJA: "Odo-Oja",
+  OGBONTIORO: "Ogbontioro",
+  OLOWO_IJESA: "Olowo-Ijesa",
+};
+
+const statusItems: Record<string, string> = {
+  ALL: "All Statuses",
+  PENDING: "Pending",
+  ASSIGNED: "Assigned",
+  RESOLVED: "Resolved",
+};
 
 export default function AdminGisMap({
   reports,
@@ -176,35 +199,45 @@ export default function AdminGisMap({
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Quarter filter */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <span className="text-muted-foreground text-xs">Quarter:</span>
-            <select
+            <Select
+              items={quarterItems}
               value={selectedQuarter}
-              onChange={(e) => setSelectedQuarter(e.target.value)}
-              className="bg-background border rounded-md px-2 py-1 text-xs focus:outline-hidden"
+              onValueChange={(val) => val && setSelectedQuarter(val)}
             >
-              <option value="ALL">All Quarters</option>
-              <option value="URO">Uro</option>
-              <option value="OKE_OSUN">Oke-Osun</option>
-              <option value="ODO_OJA">Odo-Oja</option>
-              <option value="OGBONTIORO">Ogbontioro</option>
-              <option value="OLOWO_IJESA">Olowo-Ijesa</option>
-            </select>
+              <SelectTrigger className="h-8 text-xs min-w-32 bg-background">
+                <SelectValue placeholder="Quarter" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(quarterItems).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Status filter */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <span className="text-muted-foreground text-xs">Status:</span>
-            <select
+            <Select
+              items={statusItems}
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="bg-background border rounded-md px-2 py-1 text-xs focus:outline-hidden"
+              onValueChange={(val) => val && setSelectedStatus(val)}
             >
-              <option value="ALL">All Statuses</option>
-              <option value="PENDING">Pending</option>
-              <option value="ASSIGNED">Assigned</option>
-              <option value="RESOLVED">Resolved</option>
-            </select>
+              <SelectTrigger className="h-8 text-xs min-w-28 bg-background">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(statusItems).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

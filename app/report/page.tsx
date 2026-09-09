@@ -23,6 +23,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Dynamically import map to avoid SSR Leaflet issues
 const LocationPickerMap = dynamic(
@@ -55,6 +62,13 @@ const QUARTERS = [
   { value: "OGBONTIORO", label: "Ogbontioro Quarter" },
   { value: "OLOWO_IJESA", label: "Olowo-Ijesa Quarter" },
 ];
+
+const categoryItems: Record<string, string> = Object.fromEntries(
+  CATEGORIES.map((c) => [c, c])
+);
+const quarterItems: Record<string, string> = Object.fromEntries(
+  QUARTERS.map((q) => [q.value, q.label])
+);
 
 export default function ReportWastePage() {
   const router = useRouter();
@@ -291,18 +305,22 @@ export default function ReportWastePage() {
               <CardContent className="space-y-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="category" className="text-xs">Waste Category</Label>
-                  <select
-                    id="category"
+                  <Select
+                    items={categoryItems}
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs focus:outline-hidden"
+                    onValueChange={(val) => val && setCategory(val)}
                   >
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger id="category" className="w-full text-sm h-10">
+                      <SelectValue placeholder="Select Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((cat) => (
+                        <SelectItem key={cat} value={cat}>
+                          {cat}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-1.5">
@@ -403,18 +421,22 @@ export default function ReportWastePage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
                     <Label htmlFor="quarter-select" className="text-xs">Quarter</Label>
-                    <select
-                      id="quarter-select"
+                    <Select
+                      items={quarterItems}
                       value={quarter}
-                      onChange={(e) => setQuarter(e.target.value)}
-                      className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-xs focus:outline-hidden"
+                      onValueChange={(val) => val && setQuarter(val)}
                     >
-                      {QUARTERS.map((q) => (
-                        <option key={q.value} value={q.value}>
-                          {q.label}
-                        </option>
-                      ))}
-                    </select>
+                      <SelectTrigger id="quarter-select" className="w-full text-sm h-9">
+                        <SelectValue placeholder="Select Quarter" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {QUARTERS.map((q) => (
+                          <SelectItem key={q.value} value={q.value}>
+                            {q.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   <div className="space-y-1">

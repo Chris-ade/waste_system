@@ -18,6 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import prisma from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 export const dynamic = "force-dynamic";
 
@@ -108,12 +109,12 @@ export default async function ResidentDashboardPage() {
               </Link>
             </Button>
 
-            <form action="/api/auth/logout" method="POST">
-              <Button type="submit" variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-destructive">
-                <LogOut className="size-3.5" />
-                <span className="hidden md:inline ml-1">Sign Out</span>
-              </Button>
-            </form>
+            <LogoutButton
+              variant="ghost"
+              size="sm"
+              className="text-xs text-muted-foreground hover:text-destructive"
+              text="Sign Out"
+            />
           </div>
         </div>
       </header>

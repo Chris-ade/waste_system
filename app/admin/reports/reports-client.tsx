@@ -3,24 +3,34 @@
 import { useState } from "react";
 import {
   Search,
-  Filter,
   Trash2,
   Truck,
   CheckCircle2,
-  Clock,
-  MapPin,
-  ExternalLink,
   Edit,
   Loader2,
   X,
-  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ResponsiveDialog,
+  ResponsiveDialogContent,
+  ResponsiveDialogDescription,
+  ResponsiveDialogFooter,
+  ResponsiveDialogHeader,
+  ResponsiveDialogTitle,
+} from "@/components/ui/responsive-dialog";
 
 interface CrewMember {
   id: string;
@@ -45,6 +55,28 @@ interface WasteReport {
   crewAssigned: { id: string; name: string; phone: string | null } | null;
 }
 
+const quarterFilterItems: Record<string, string> = {
+  ALL: "All 5 Quarters",
+  URO: "Uro Quarter",
+  OKE_OSUN: "Oke-Osun",
+  ODO_OJA: "Odo-Oja",
+  OGBONTIORO: "Ogbontioro",
+  OLOWO_IJESA: "Olowo-Ijesa",
+};
+
+const statusFilterItems: Record<string, string> = {
+  ALL: "All Statuses",
+  PENDING: "Pending Review",
+  ASSIGNED: "Assigned Crew",
+  RESOLVED: "Resolved / Cleared",
+};
+
+const modalStatusItems: Record<string, string> = {
+  PENDING: "PENDING (Awaiting Review)",
+  ASSIGNED: "ASSIGNED (Dispatched to Crew)",
+  RESOLVED: "RESOLVED (Evacuated / Cleared)",
+};
+
 export function ReportsClient({
   initialReports,
   crewMembers,
@@ -60,15 +92,22 @@ export function ReportsClient({
   // Selected report for modal details/actions
   const [activeReport, setActiveReport] = useState<WasteReport | null>(null);
   const [newStatus, setNewStatus] = useState<"PENDING" | "ASSIGNED" | "RESOLVED">("PENDING");
-  const [assignedCrewId, setAssignedCrewId] = useState<string>("");
+  const [assignedCrewId, setAssignedCrewId] = useState<string>("NONE");
   const [notes, setNotes] = useState<string>("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const crewItemsMap: Record<string, string> = {
+    NONE: "-- Unassigned --",
+    ...Object.fromEntries(
+      crewMembers.map((c) => [c.id, `${c.name}${c.phone ? ` (${c.phone})` : ""}`])
+    ),
+  };
+
   const openActionModal = (report: WasteReport) => {
     setActiveReport(report);
     setNewStatus(report.status);
-    setAssignedCrewId(report.crewAssigned?.id || "");
+    setAssignedCrewId(report.crewAssigned?.id || "NONE");
     setNotes(report.adminNotes || "");
     setMessage(null);
   };
@@ -84,7 +123,7 @@ export function ReportsClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           status: newStatus,
-          crewAssignedId: assignedCrewId || null,
+          crewAssignedId: assignedCrewId === "NONE" ? null : assignedCrewId,
           adminNotes: notes,
         }),
       });
@@ -96,7 +135,6 @@ export function ReportsClient({
         return;
       }
 
-      // Update state
       setReports((prev) =>
         prev.map((r) => (r.id === activeReport.id ? data.report : r))
       );
@@ -155,32 +193,42 @@ export function ReportsClient({
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-            {/* Quarter Filter */}
-            <select
+          <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+            {/* Quarter Filter with Shadcn Select */}
+            <Select
+              items={quarterFilterItems}
               value={selectedQuarter}
-              onChange={(e) => setSelectedQuarter(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:outline-hidden"
+              onValueChange={(val) => val && setSelectedQuarter(val)}
             >
-              <option value="ALL">All 5 Quarters</option>
-              <option value="URO">Uro Quarter</option>
-              <option value="OKE_OSUN">Oke-Osun</option>
-              <option value="ODO_OJA">Odo-Oja</option>
-              <option value="OGBONTIORO">Ogbontioro</option>
-              <option value="OLOWO_IJESA">Olowo-Ijesa</option>
-            </select>
+              <SelectTrigger className="h-9 text-xs min-w-36 bg-background">
+                <SelectValue placeholder="Quarter" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(quarterFilterItems).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            {/* Status Filter */}
-            <select
+            {/* Status Filter with Shadcn Select */}
+            <Select
+              items={statusFilterItems}
               value={selectedStatus}
-              onChange={(e) => setSelectedStatus(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:outline-hidden"
+              onValueChange={(val) => val && setSelectedStatus(val)}
             >
-              <option value="ALL">All Statuses</option>
-              <option value="PENDING">Pending Review</option>
-              <option value="ASSIGNED">Assigned Crew</option>
-              <option value="RESOLVED">Resolved / Cleared</option>
-            </select>
+              <SelectTrigger className="h-9 text-xs min-w-36 bg-background">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(statusFilterItems).map(([key, label]) => (
+                  <SelectItem key={key} value={key}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
@@ -306,21 +354,21 @@ export function ReportsClient({
         </div>
       </Card>
 
-      {/* Detail & Action Modal */}
-      {activeReport && (
-        <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="w-full max-w-xl bg-card border rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between p-4 border-b">
-              <div>
-                <h3 className="font-bold text-base">Manage Waste Report</h3>
-                <span className="text-xs text-muted-foreground font-mono">Ref: {activeReport.id}</span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={() => setActiveReport(null)}>
-                <X className="size-4" />
-              </Button>
-            </div>
+      {/* Detail & Action Modal Using ResponsiveDialog (Dialog on desktop, Drawer on mobile) */}
+      <ResponsiveDialog
+        open={!!activeReport}
+        onOpenChange={(open) => !open && setActiveReport(null)}
+      >
+        <ResponsiveDialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto">
+          <ResponsiveDialogHeader>
+            <ResponsiveDialogTitle>Manage Waste Incident</ResponsiveDialogTitle>
+            <ResponsiveDialogDescription className="font-mono text-[11px]">
+              Ref: {activeReport?.id}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
 
-            <div className="p-5 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+          {activeReport && (
+            <div className="space-y-4 text-xs py-2">
               {message && (
                 <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center gap-2">
                   <CheckCircle2 className="size-4" />
@@ -367,38 +415,49 @@ export function ReportsClient({
               <div className="space-y-3 pt-2">
                 <div className="space-y-1">
                   <Label htmlFor="status-select" className="text-xs">Update Operational Status</Label>
-                  <select
-                    id="status-select"
+                  <Select
+                    items={modalStatusItems}
                     value={newStatus}
-                    onChange={(e) => setNewStatus(e.target.value as any)}
-                    className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:outline-hidden"
+                    onValueChange={(val) => val && setNewStatus(val as any)}
                   >
-                    <option value="PENDING">PENDING (Awaiting Review)</option>
-                    <option value="ASSIGNED">ASSIGNED (Dispatched to Crew)</option>
-                    <option value="RESOLVED">RESOLVED (Evacuated / Cleared)</option>
-                  </select>
+                    <SelectTrigger id="status-select" className="w-full text-xs h-9">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(modalStatusItems).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-1">
                   <Label htmlFor="crew-select" className="text-xs">Assign Collection Crew</Label>
-                  <select
-                    id="crew-select"
+                  <Select
+                    items={crewItemsMap}
                     value={assignedCrewId}
-                    onChange={(e) => {
-                      setAssignedCrewId(e.target.value);
-                      if (e.target.value && newStatus === "PENDING") {
-                        setNewStatus("ASSIGNED");
+                    onValueChange={(val) => {
+                      if (val) {
+                        setAssignedCrewId(val);
+                        if (val !== "NONE" && newStatus === "PENDING") {
+                          setNewStatus("ASSIGNED");
+                        }
                       }
                     }}
-                    className="w-full h-9 rounded-md border border-input bg-background px-3 py-1 text-xs shadow-xs focus:outline-hidden"
                   >
-                    <option value="">-- Select Crew Member --</option>
-                    {crewMembers.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} {c.phone ? `(${c.phone})` : ""}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger id="crew-select" className="w-full text-xs h-9">
+                      <SelectValue placeholder="Assign Crew" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(crewItemsMap).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-1">
@@ -414,24 +473,24 @@ export function ReportsClient({
                 </div>
               </div>
             </div>
+          )}
 
-            <div className="flex items-center justify-between p-4 border-t bg-muted/20">
-              <Button variant="outline" size="sm" onClick={() => setActiveReport(null)}>
-                Close
-              </Button>
-              <Button
-                size="sm"
-                onClick={handleUpdate}
-                disabled={saving}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-              >
-                {saving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : null}
-                {saving ? "Saving Changes..." : "Save Changes"}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+          <ResponsiveDialogFooter className="flex items-center justify-between border-t pt-3">
+            <Button variant="outline" size="sm" onClick={() => setActiveReport(null)}>
+              Close
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleUpdate}
+              disabled={saving}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
+              {saving ? <Loader2 className="size-3.5 animate-spin mr-1.5" /> : null}
+              {saving ? "Saving Changes..." : "Save Changes"}
+            </Button>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
     </div>
   );
 }
