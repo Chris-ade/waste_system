@@ -21,7 +21,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -39,10 +46,12 @@ const LocationPickerMap = dynamic(
     loading: () => (
       <div className="h-[380px] w-full rounded-xl border flex flex-col items-center justify-center bg-muted/30">
         <Loader2 className="size-6 animate-spin text-primary" />
-        <span className="mt-2 text-xs text-muted-foreground">Initializing Ikere-Ekiti Map...</span>
+        <span className="mt-2 text-xs text-muted-foreground">
+          Initializing Ikere-Ekiti Map...
+        </span>
       </div>
     ),
-  }
+  },
 );
 
 const CATEGORIES = [
@@ -64,10 +73,10 @@ const QUARTERS = [
 ];
 
 const categoryItems: Record<string, string> = Object.fromEntries(
-  CATEGORIES.map((c) => [c, c])
+  CATEGORIES.map((c) => [c, c]),
 );
 const quarterItems: Record<string, string> = Object.fromEntries(
-  QUARTERS.map((q) => [q.value, q.label])
+  QUARTERS.map((q) => [q.value, q.label]),
 );
 
 export default function ReportWastePage() {
@@ -183,20 +192,27 @@ export default function ReportWastePage() {
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold tracking-tight">Report Received</h2>
+            <h2 className="text-2xl font-bold tracking-tight">
+              Report Received
+            </h2>
             <p className="text-xs text-muted-foreground">
-              Thank you for keeping Ikere-Ekiti clean. The municipal sanitation administration has been notified.
+              Thank you for keeping Ikere-Ekiti clean. The municipal sanitation
+              administration has been notified.
             </p>
           </div>
 
           <div className="p-4 rounded-xl border bg-muted/40 text-left text-xs space-y-2">
             <div className="flex justify-between items-center py-1 border-b">
               <span className="text-muted-foreground">Reference ID:</span>
-              <span className="font-mono font-medium">{submittedReport.id}</span>
+              <span className="font-mono font-medium">
+                {submittedReport.id}
+              </span>
             </div>
             <div className="flex justify-between items-center py-1 border-b">
               <span className="text-muted-foreground">Quarter:</span>
-              <span className="font-medium">{submittedReport.quarter.replace("_", " ")}</span>
+              <span className="font-medium">
+                {submittedReport.quarter.replace("_", " ")}
+              </span>
             </div>
             <div className="flex justify-between items-center py-1 border-b">
               <span className="text-muted-foreground">Category:</span>
@@ -211,7 +227,10 @@ export default function ReportWastePage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2.5 pt-2">
-            <Button asChild className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Button
+              asChild
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white"
+            >
               <Link href="/dashboard">View in Resident Dashboard</Link>
             </Button>
             <Button asChild variant="outline" className="flex-1">
@@ -228,7 +247,10 @@ export default function ReportWastePage() {
       {/* Header */}
       <header className="sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-14 max-w-4xl items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground"
+          >
             <ArrowLeft className="size-4" />
             <span>Back to Home</span>
           </Link>
@@ -245,12 +267,12 @@ export default function ReportWastePage() {
       {/* Main Container */}
       <main className="flex-1 container mx-auto max-w-2xl px-4 py-8">
         <div className="mb-6 text-center space-y-1">
-          <Badge variant="outline" className="text-emerald-700 border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/40 text-xs">
-            Ikere-Ekiti Environmental Sanitation
-          </Badge>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Report Waste Incident</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            Report Waste Incident
+          </h1>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Pin the accumulation site and upload evidence for swift municipal dispatch
+            Pin the accumulation site and upload evidence for swift municipal
+            dispatch
           </p>
         </div>
 
@@ -271,13 +293,15 @@ export default function ReportWastePage() {
                     completed
                       ? "bg-emerald-600 text-white"
                       : active
-                      ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
-                      : "bg-muted text-muted-foreground"
+                        ? "bg-primary text-primary-foreground ring-2 ring-primary/30"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   <Icon className="size-4" />
                 </div>
-                <span className={`text-[11px] mt-1.5 ${active ? "font-semibold text-foreground" : "text-muted-foreground"}`}>
+                <span
+                  className={`text-[11px] mt-1.5 ${active ? "font-semibold text-foreground" : "text-muted-foreground"}`}
+                >
                   {s.label}
                 </span>
               </div>
@@ -299,18 +323,24 @@ export default function ReportWastePage() {
               <CardHeader>
                 <CardTitle className="text-lg">Incident Details</CardTitle>
                 <CardDescription className="text-xs">
-                  Specify the type of refuse and any helpful description for the sanitation team
+                  Specify the type of refuse and any helpful description for the
+                  sanitation team
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="category" className="text-xs">Waste Category</Label>
+                  <Label htmlFor="category" className="text-sm mt-4">
+                    Waste Category
+                  </Label>
                   <Select
                     items={categoryItems}
                     value={category}
                     onValueChange={(val) => val && setCategory(val)}
                   >
-                    <SelectTrigger id="category" className="w-full text-sm h-10">
+                    <SelectTrigger
+                      id="category"
+                      className="w-full text-sm h-10"
+                    >
                       <SelectValue placeholder="Select Category" />
                     </SelectTrigger>
                     <SelectContent>
@@ -324,7 +354,9 @@ export default function ReportWastePage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label htmlFor="description" className="text-xs">Description & Landmark Details (Optional)</Label>
+                  <Label htmlFor="description" className="text-sm">
+                    Description & Landmark Details (Optional)
+                  </Label>
                   <Textarea
                     id="description"
                     placeholder="Describe the accumulation size, proximity to gutters or buildings, hazards, etc."
@@ -336,7 +368,10 @@ export default function ReportWastePage() {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end pt-2 border-t bg-muted/20">
-                <Button onClick={() => setStep(2)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button
+                  onClick={() => setStep(2)}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
                   Next: Photo Evidence
                   <ArrowRight className="size-4 ml-1.5" />
                 </Button>
@@ -349,11 +384,12 @@ export default function ReportWastePage() {
             <div>
               <CardHeader>
                 <CardTitle className="text-lg">Photographic Evidence</CardTitle>
-                <CardDescription className="text-xs">
-                  A photo helps the sanitation supervisor estimate the truck size and crew required
+                <CardDescription className="text-sm">
+                  A photo helps the sanitation supervisor estimate the truck
+                  size and crew required
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 my-4">
                 {imagePreview ? (
                   <div className="relative rounded-xl overflow-hidden border">
                     <img
@@ -375,7 +411,9 @@ export default function ReportWastePage() {
                     <div className="size-12 rounded-full bg-muted flex items-center justify-center text-muted-foreground mb-3">
                       <Camera className="size-6" />
                     </div>
-                    <span className="text-sm font-semibold">Take a photo or upload from device</span>
+                    <span className="text-sm font-semibold">
+                      Take a photo or upload from device
+                    </span>
                     <span className="text-xs text-muted-foreground mt-1 max-w-xs">
                       Supports JPG, PNG, WEBP (Max 10MB)
                     </span>
@@ -400,7 +438,10 @@ export default function ReportWastePage() {
                   <ArrowLeft className="size-4 mr-1.5" />
                   Back
                 </Button>
-                <Button onClick={() => setStep(3)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button
+                  onClick={() => setStep(3)}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
                   Next: Pin Location
                   <ArrowRight className="size-4 ml-1.5" />
                 </Button>
@@ -412,21 +453,29 @@ export default function ReportWastePage() {
           {step === 3 && (
             <div>
               <CardHeader>
-                <CardTitle className="text-lg">Location & Quarter Pin</CardTitle>
+                <CardTitle className="text-lg">
+                  Location & Quarter Pin
+                </CardTitle>
                 <CardDescription className="text-xs">
-                  Click or drag the marker on the Ikere-Ekiti map to set the exact refuse site
+                  Click or drag the marker on the Ikere-Ekiti map to set the
+                  exact refuse site
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 my-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1">
-                    <Label htmlFor="quarter-select" className="text-xs">Quarter</Label>
+                    <Label htmlFor="quarter-select" className="text-sm">
+                      Quarter
+                    </Label>
                     <Select
                       items={quarterItems}
                       value={quarter}
                       onValueChange={(val) => val && setQuarter(val)}
                     >
-                      <SelectTrigger id="quarter-select" className="w-full text-sm h-9">
+                      <SelectTrigger
+                        id="quarter-select"
+                        className="w-full text-sm h-9"
+                      >
                         <SelectValue placeholder="Select Quarter" />
                       </SelectTrigger>
                       <SelectContent>
@@ -440,7 +489,9 @@ export default function ReportWastePage() {
                   </div>
 
                   <div className="space-y-1">
-                    <Label htmlFor="address-input" className="text-xs">Street / Notable Landmark</Label>
+                    <Label htmlFor="address-input" className="text-sm">
+                      Street / Notable Landmark
+                    </Label>
                     <Input
                       id="address-input"
                       placeholder="e.g. Opposite Palace entrance, Ado road"
@@ -452,7 +503,7 @@ export default function ReportWastePage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs flex items-center justify-between">
+                  <Label className="text-sm flex items-center justify-between">
                     <span>Map Coordinate Picker</span>
                     <span className="text-[11px] text-muted-foreground font-mono">
                       Lat: {latitude} | Lng: {longitude}
@@ -475,7 +526,9 @@ export default function ReportWastePage() {
                   disabled={submitting}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
                 >
-                  {submitting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+                  {submitting ? (
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                  ) : null}
                   {submitting ? "Submitting Report..." : "Submit Waste Report"}
                 </Button>
               </CardFooter>

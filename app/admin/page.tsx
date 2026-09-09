@@ -4,12 +4,9 @@ import {
   AlertCircle,
   Truck,
   CheckCircle2,
-  TrendingUp,
   MapPin,
   ArrowRight,
-  Clock,
   Layers,
-  Users,
 } from "lucide-react";
 import {
   Card,
