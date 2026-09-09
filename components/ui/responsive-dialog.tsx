@@ -22,6 +22,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "cn";
 
 interface ResponsiveDialogContextValue {
@@ -151,13 +152,23 @@ export function ResponsiveDialogContent({
   const { isMobile } = useResponsiveDialog();
   if (isMobile) {
     return (
-      <DrawerContent className={cn("px-4 pb-6", className)}>
+      <DrawerContent
+        className={cn(
+          "max-h-[90dvh] flex flex-col px-4 pb-6",
+          className
+        )}
+      >
         {children}
       </DrawerContent>
     );
   }
   return (
-    <DialogContent className={cn("sm:max-w-lg", className)}>
+    <DialogContent
+      className={cn(
+        "sm:max-w-lg max-h-[90vh] flex flex-col overflow-y-auto",
+        className
+      )}
+    >
       {children}
     </DialogContent>
   );
@@ -175,13 +186,13 @@ export function ResponsiveDialogHeader({
   const { isMobile } = useResponsiveDialog();
   if (isMobile) {
     return (
-      <DrawerHeader className={cn("text-left px-0 pb-2", className)}>
+      <DrawerHeader className={cn("text-left px-0 pb-2 shrink-0", className)}>
         {children}
       </DrawerHeader>
     );
   }
   return (
-    <DialogHeader className={cn("pb-2", className)}>
+    <DialogHeader className={cn("pb-2 shrink-0", className)}>
       {children}
     </DialogHeader>
   );
@@ -235,6 +246,50 @@ export function ResponsiveDialogDescription({
   );
 }
 
+export interface ResponsiveDialogBodyProps extends React.ComponentProps<"div"> {
+  scrollable?: boolean;
+}
+
+export function ResponsiveDialogBody({
+  className,
+  children,
+  scrollable = true,
+  ...props
+}: ResponsiveDialogBodyProps) {
+  return (
+    <div
+      data-slot="responsive-dialog-body"
+      className={cn(
+        "flex-1 min-h-0",
+        scrollable && "overflow-y-auto overscroll-contain touch-auto pr-1",
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}
+
+export interface ResponsiveDialogScrollAreaProps
+  extends React.ComponentProps<typeof ScrollArea> {}
+
+export function ResponsiveDialogScrollArea({
+  className,
+  children,
+  ...props
+}: ResponsiveDialogScrollAreaProps) {
+  return (
+    <ScrollArea
+      data-slot="responsive-dialog-scroll-area"
+      className={cn("flex-1 min-h-0 w-full", className)}
+      {...props}
+    >
+      {children}
+    </ScrollArea>
+  );
+}
+
 export interface ResponsiveDialogFooterProps {
   children?: React.ReactNode;
   className?: string;
@@ -247,13 +302,13 @@ export function ResponsiveDialogFooter({
   const { isMobile } = useResponsiveDialog();
   if (isMobile) {
     return (
-      <DrawerFooter className={cn("flex flex-col gap-2 pt-4 px-0", className)}>
+      <DrawerFooter className={cn("flex flex-col gap-2 pt-4 px-0 shrink-0", className)}>
         {children}
       </DrawerFooter>
     );
   }
   return (
-    <DialogFooter className={cn("pt-4", className)}>
+    <DialogFooter className={cn("pt-4 shrink-0", className)}>
       {children}
     </DialogFooter>
   );

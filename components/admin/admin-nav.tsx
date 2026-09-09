@@ -199,17 +199,16 @@ export function AdminNav({
                   {user.name}
                 </span>
               </div>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <div className="shrink-0">
-              <LogoutButton
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground hover:text-destructive p-2 h-8 w-8"
-                showText={false}
-              />
+              <div className="flex items-center gap-1.5">
+                <div className="shrink-0">
+                  <LogoutButton
+                    variant="ghost"
+                    size="sm"
+                    className="text-muted-foreground hover:text-destructive p-2 h-8 w-8"
+                    showText={false}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>

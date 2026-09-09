@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import {
   ResponsiveDialog,
+  ResponsiveDialogBody,
   ResponsiveDialogContent,
   ResponsiveDialogDescription,
   ResponsiveDialogFooter,
@@ -359,7 +360,7 @@ export function ReportsClient({
         open={!!activeReport}
         onOpenChange={(open) => !open && setActiveReport(null)}
       >
-        <ResponsiveDialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto">
+        <ResponsiveDialogContent className="sm:max-w-xl max-h-[88vh]">
           <ResponsiveDialogHeader>
             <ResponsiveDialogTitle>Manage Waste Incident</ResponsiveDialogTitle>
             <ResponsiveDialogDescription className="font-mono text-[11px]">
@@ -368,7 +369,7 @@ export function ReportsClient({
           </ResponsiveDialogHeader>
 
           {activeReport && (
-            <div className="space-y-4 text-xs py-2">
+            <ResponsiveDialogBody className="space-y-4 text-xs py-2">
               {message && (
                 <div className="p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center gap-2">
                   <CheckCircle2 className="size-4" />
@@ -472,7 +473,7 @@ export function ReportsClient({
                   />
                 </div>
               </div>
-            </div>
+            </ResponsiveDialogBody>
           )}
 
           <ResponsiveDialogFooter className="flex items-center justify-between border-t pt-3">
