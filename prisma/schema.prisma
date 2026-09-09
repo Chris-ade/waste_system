@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  RESIDENT
+  ADMIN
+  CREW
+}
+
+enum Quarter {
+  URO
+  OKE_OSUN
+  ODO_OJA
+  OGBONTIORO
+  OLOWO_IJESA
+}
+
+enum ReportStatus {
+  PENDING
+  ASSIGNED
+  RESOLVED
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String
+  email         String          @unique
+  passwordHash  String          @map("password_hash")
+  phone         String?
+  quarter       Quarter?
+  role          Role            @default(RESIDENT)
+  reports       WasteReport[]   @relation("UserReports")
+  assignedTasks WasteReport[]   @relation("CrewReports")
+  schedules     PickupSchedule[] @relation("CrewSchedules")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model WasteReport {
+  id             String       @id @default(cuid())
+  userId         String?      @map("user_id")
+  user           User?        @relation("UserReports", fields: [userId], references: [id], onDelete: SetNull)
+  category       String
+  description    String?
+  imageUrl       String?      @map("image_url")
+  latitude       Float
+  longitude      Float
+  quarter        Quarter
+  address        String?
+  status         ReportStatus @default(PENDING)
+  crewAssignedId String?      @map("crew_assigned_id")
+  crewAssigned   User?        @relation("CrewReports", fields: [crewAssignedId], references: [id], onDelete: SetNull)
+  adminNotes     String?      @map("admin_notes")
+  resolvedAt     DateTime?    @map("resolved_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@map("waste_reports")
+}
+
+model PickupSchedule {
+  id             String   @id @default(cuid())
+  quarter        Quarter
+  dayOfWeek      String   @map("day_of_week")
+  timeSlot       String?  @map("time_slot")
+  crewAssigned   String?  @map("crew_assigned")
+  crewUserId     String?  @map("crew_user_id")
+  crewUser       User?    @relation("CrewSchedules", fields: [crewUserId], references: [id], onDelete: SetNull)
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("pickup_schedules")
+}
