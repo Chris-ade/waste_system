@@ -26,7 +26,18 @@ export async function proxy(req: NextRequest) {
     }
   }
 
-  // 1. Auth pages (login, register)
+  // Redirect logged-in users to their dashboard
+  if (pathname === "/") {
+    if (user) {
+      if (user.role === "ADMIN" || user.role === "CREW") {
+        return NextResponse.redirect(new URL("/admin", req.url));
+      }
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+    return NextResponse.next();
+  }
+
+  // Auth pages (login, register)
   if (pathname === "/login" || pathname === "/register") {
     if (user) {
       if (user.role === "ADMIN" || user.role === "CREW") {
@@ -37,7 +48,7 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Admin routes
+  // Admin routes
   if (pathname.startsWith("/admin")) {
     if (!user) {
       const loginUrl = new URL("/login", req.url);
@@ -50,7 +61,7 @@ export async function proxy(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 3. Resident dashboard routes
+  // Resident dashboard routes
   if (pathname.startsWith("/dashboard")) {
     if (!user) {
       const loginUrl = new URL("/login", req.url);
@@ -64,5 +75,5 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*", "/login", "/register"],
+  matcher: ["/", "/admin/:path*", "/dashboard/:path*", "/login", "/register"],
 };

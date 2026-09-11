@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Trash2, MapPin, Calendar, Camera, Clock, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import prisma from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
 
 export const revalidate = 60; // revalidate every minute
 
@@ -63,6 +65,14 @@ const quarterDetails: Record<
 };
 
 export default async function HomePage() {
+  const user = await getCurrentUser();
+  if (user) {
+    if (user.role === "ADMIN" || user.role === "CREW") {
+      redirect("/admin");
+    }
+    redirect("/dashboard");
+  }
+
   const { schedules, totalReports, resolvedReports } =
     await getStatsAndSchedules();
 
