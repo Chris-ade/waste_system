@@ -8,6 +8,14 @@ import {
   CheckCircle2,
   Edit,
   Loader2,
+  Eye,
+  MapPin,
+  User,
+  Phone,
+  Mail,
+  ExternalLink,
+  FileText,
+  AlertCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,6 +96,9 @@ export function ReportsClient({
   const [search, setSearch] = useState("");
   const [selectedQuarter, setSelectedQuarter] = useState("ALL");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
+
+  // Selected report for viewing details modal
+  const [viewingReport, setViewingReport] = useState<WasteReport | null>(null);
 
   // Selected report for modal details/actions
   const [activeReport, setActiveReport] = useState<WasteReport | null>(null);
@@ -353,6 +364,15 @@ export function ReportsClient({
                           size="sm"
                           variant="outline"
                           className="h-7 text-xs px-2.5"
+                          onClick={() => setViewingReport(report)}
+                        >
+                          <Eye className="size-3 mr-1" />
+                          View
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs px-2.5"
                           onClick={() => openActionModal(report)}
                         >
                           <Edit className="size-3 mr-1" />
@@ -543,6 +563,247 @@ export function ReportsClient({
                 <Loader2 className="size-3.5 animate-spin mr-1.5" />
               ) : null}
               {saving ? "Saving Changes..." : "Save Changes"}
+            </Button>
+          </ResponsiveDialogFooter>
+        </ResponsiveDialogContent>
+      </ResponsiveDialog>
+
+      {/* View Incident Detail Modal */}
+      <ResponsiveDialog
+        open={!!viewingReport}
+        onOpenChange={(open) => !open && setViewingReport(null)}
+      >
+        <ResponsiveDialogContent className="sm:max-w-2xl max-h-[88vh]">
+          <ResponsiveDialogHeader>
+            <div className="flex items-center justify-between pr-6 gap-2">
+              <ResponsiveDialogTitle className="text-base sm:text-lg">
+                Incident Report Details
+              </ResponsiveDialogTitle>
+              {viewingReport && (
+                <Badge
+                  variant="outline"
+                  className={`text-[10px] uppercase font-semibold ${
+                    viewingReport.status === "RESOLVED"
+                      ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                      : viewingReport.status === "ASSIGNED"
+                        ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                        : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                  }`}
+                >
+                  {viewingReport.status}
+                </Badge>
+              )}
+            </div>
+            <ResponsiveDialogDescription className="font-mono text-[11px]">
+              Ref: #{viewingReport?.id} • Submitted on{" "}
+              {viewingReport
+                ? new Date(viewingReport.createdAt).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })
+                : ""}
+            </ResponsiveDialogDescription>
+          </ResponsiveDialogHeader>
+
+          {viewingReport && (
+            <ResponsiveDialogBody className="space-y-4 text-xs py-2">
+              {/* Photo Evidence in Full Resolution */}
+              <div>
+                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block mb-1.5">
+                  Photo Evidence
+                </span>
+                {viewingReport.imageUrl ? (
+                  <div className="relative rounded-xl overflow-hidden border bg-muted/20 group">
+                    <img
+                      src={viewingReport.imageUrl}
+                      alt="Waste Evidence"
+                      className="w-full max-h-80 sm:max-h-96 object-contain mx-auto bg-black/5"
+                    />
+                    <div className="absolute bottom-2 right-2">
+                      <a
+                        href={viewingReport.imageUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[11px] bg-background/90 hover:bg-background backdrop-blur-xs px-2.5 py-1 rounded-md border shadow-xs flex items-center gap-1.5 text-foreground font-medium transition-colors"
+                      >
+                        <ExternalLink className="size-3" />
+                        Open original photo
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed p-6 text-center text-muted-foreground bg-muted/10 flex flex-col items-center justify-center gap-1.5">
+                    <AlertCircle className="size-5 text-muted-foreground/60" />
+                    <p className="text-xs font-medium">
+                      No photo evidence provided with this report
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Core Attributes */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3 rounded-xl bg-muted/30 border">
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Category
+                  </span>
+                  <span className="font-semibold text-foreground text-xs sm:text-sm">
+                    {viewingReport.category}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Quarter
+                  </span>
+                  <span className="font-medium text-foreground text-xs sm:text-sm">
+                    {viewingReport.quarter.replace("_", " ")}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Status
+                  </span>
+                  <span className="font-medium text-foreground text-xs sm:text-sm">
+                    {viewingReport.status}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[11px] text-muted-foreground block">
+                    Date Logged
+                  </span>
+                  <span className="font-medium text-foreground text-xs sm:text-sm">
+                    {new Date(viewingReport.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+              </div>
+
+              {/* Location & Landmark */}
+              <div className="p-3 rounded-xl border bg-card space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                    <MapPin className="size-3 text-emerald-600" /> Location Details
+                  </span>
+                  <a
+                    href={`https://www.google.com/maps?q=${viewingReport.latitude},${viewingReport.longitude}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[11px] text-emerald-600 hover:underline inline-flex items-center gap-1 font-medium"
+                  >
+                    Open in Maps <ExternalLink className="size-3" />
+                  </a>
+                </div>
+                <div className="text-foreground font-medium text-[13px]">
+                  {viewingReport.address || "No street address or landmark specified"}
+                </div>
+                <div className="font-mono text-[11px] text-muted-foreground">
+                  Coordinates: {viewingReport.latitude.toFixed(6)},{" "}
+                  {viewingReport.longitude.toFixed(6)}
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="p-3 rounded-xl border bg-card space-y-1">
+                <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                  <FileText className="size-3" /> Resident Description
+                </span>
+                <p className="text-foreground leading-relaxed text-[12px] whitespace-pre-wrap">
+                  {viewingReport.description ||
+                    "No additional description provided by resident."}
+                </p>
+              </div>
+
+              {/* Reporter & Assigned Crew */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl border bg-card space-y-1.5">
+                  <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                    <User className="size-3" /> Reporter Details
+                  </span>
+                  <div className="font-medium text-foreground text-[13px]">
+                    {viewingReport.user?.name || "Anonymous Resident"}
+                  </div>
+                  {viewingReport.user?.phone && (
+                    <div className="flex items-center gap-1.5 text-muted-foreground text-[12px]">
+                      <Phone className="size-3 shrink-0" />
+                      <a
+                        href={`tel:${viewingReport.user.phone}`}
+                        className="hover:underline text-foreground"
+                      >
+                        {viewingReport.user.phone}
+                      </a>
+                    </div>
+                  )}
+                  {viewingReport.user?.email && (
+                    <div className="flex items-center gap-1.5 text-muted-foreground text-[12px]">
+                      <Mail className="size-3 shrink-0" />
+                      <span className="truncate">{viewingReport.user.email}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="p-3 rounded-xl border bg-card space-y-1.5">
+                  <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                    <Truck className="size-3" /> Assigned Collection Crew
+                  </span>
+                  {viewingReport.crewAssigned ? (
+                    <>
+                      <div className="font-medium text-foreground text-[13px]">
+                        {viewingReport.crewAssigned.name}
+                      </div>
+                      {viewingReport.crewAssigned.phone && (
+                        <div className="flex items-center gap-1.5 text-muted-foreground text-[12px]">
+                          <Phone className="size-3 shrink-0" />
+                          <a
+                            href={`tel:${viewingReport.crewAssigned.phone}`}
+                            className="hover:underline text-foreground"
+                          >
+                            {viewingReport.crewAssigned.phone}
+                          </a>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-muted-foreground text-[12px] italic">
+                      No collection crew assigned yet
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Admin / Dispatch Notes if present */}
+              {viewingReport.adminNotes && (
+                <div className="p-3 rounded-xl border bg-amber-500/5 border-amber-500/20 space-y-1">
+                  <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
+                    Admin / Dispatch Notes
+                  </span>
+                  <p className="text-foreground text-[12px] whitespace-pre-wrap">
+                    {viewingReport.adminNotes}
+                  </p>
+                </div>
+              )}
+            </ResponsiveDialogBody>
+          )}
+
+          <ResponsiveDialogFooter className="flex items-center justify-between border-t pt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setViewingReport(null)}
+            >
+              Close
+            </Button>
+            <Button
+              size="sm"
+              onClick={() => {
+                const reportToManage = viewingReport;
+                setViewingReport(null);
+                if (reportToManage) {
+                  openActionModal(reportToManage);
+                }
+              }}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+            >
+              <Edit className="size-3.5" />
+              Manage Incident
             </Button>
           </ResponsiveDialogFooter>
         </ResponsiveDialogContent>

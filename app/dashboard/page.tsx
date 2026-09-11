@@ -1,20 +1,23 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   Trash2,
   PlusCircle,
-  Clock,
-  CheckCircle2,
   Truck,
-  AlertCircle,
   MapPin,
   Calendar,
-  LogOut,
   User as UserIcon,
+  Clock,
+  CircleAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import prisma from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
@@ -82,7 +85,10 @@ export default async function ResidentDashboardPage() {
       {/* Top Navbar */}
       <header className="sticky top-0 z-30 w-full border-b bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-2.5 font-bold text-base tracking-tight">
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 font-bold text-base tracking-tight"
+          >
             <div className="flex size-8 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-xs">
               <Trash2 className="size-4" />
             </div>
@@ -102,7 +108,11 @@ export default async function ResidentDashboardPage() {
               )}
             </div>
 
-            <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs">
+            <Button
+              asChild
+              size="sm"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs"
+            >
               <Link href="/report" className="flex items-center gap-1.5">
                 <PlusCircle className="size-4" />
                 <span className="hidden xs:inline">New</span> Report
@@ -124,9 +134,12 @@ export default async function ResidentDashboardPage() {
         {/* Welcome Banner */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Resident Portal</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+              Resident Portal
+            </h1>
             <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-              Track your waste incident reports and stay updated on Ikere-Ekiti sanitation operations.
+              Track your waste incident reports and stay updated on Ikere-Ekiti
+              sanitation operations.
             </p>
           </div>
 
@@ -140,7 +153,8 @@ export default async function ResidentDashboardPage() {
                   Your Pickup: Every {schedule.dayOfWeek}
                 </span>
                 <span className="text-muted-foreground">
-                  {schedule.timeSlot || "07:00 AM - 11:00 AM"} ({user?.quarter?.replace("_", " ")})
+                  {schedule.timeSlot || "07:00 AM - 11:00 AM"} (
+                  {user?.quarter?.replace("_", " ")})
                 </span>
               </div>
             </div>
@@ -151,8 +165,12 @@ export default async function ResidentDashboardPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className="shadow-xs border">
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs">Total Reports</CardDescription>
-              <CardTitle className="text-2xl font-bold">{totalReports}</CardTitle>
+              <CardDescription className="text-xs">
+                Total Reports
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold">
+                {totalReports}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 text-[11px] text-muted-foreground">
               Submitted across Ikere
@@ -161,8 +179,12 @@ export default async function ResidentDashboardPage() {
 
           <Card className="shadow-xs border">
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs">Pending Review</CardDescription>
-              <CardTitle className="text-2xl font-bold text-amber-600">{pendingReports}</CardTitle>
+              <CardDescription className="text-xs">
+                Pending Review
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-amber-600">
+                {pendingReports}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 text-[11px] text-muted-foreground">
               Awaiting admin dispatch
@@ -171,8 +193,12 @@ export default async function ResidentDashboardPage() {
 
           <Card className="shadow-xs border">
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs">Assigned to Crew</CardDescription>
-              <CardTitle className="text-2xl font-bold text-blue-600">{assignedReports}</CardTitle>
+              <CardDescription className="text-xs">
+                Assigned to Crew
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-blue-600">
+                {assignedReports}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 text-[11px] text-muted-foreground">
               Scheduled for collection
@@ -181,8 +207,12 @@ export default async function ResidentDashboardPage() {
 
           <Card className="shadow-xs border">
             <CardHeader className="p-4 pb-2">
-              <CardDescription className="text-xs">Resolved & Cleared</CardDescription>
-              <CardTitle className="text-2xl font-bold text-emerald-600">{resolvedReports}</CardTitle>
+              <CardDescription className="text-xs">
+                Resolved & Cleared
+              </CardDescription>
+              <CardTitle className="text-2xl font-bold text-emerald-600">
+                {resolvedReports}
+              </CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 text-[11px] text-muted-foreground">
               Evacuation confirmed
@@ -216,18 +246,26 @@ export default async function ResidentDashboardPage() {
                 <div className="space-y-1">
                   <p className="text-sm font-semibold">No waste reports yet</p>
                   <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-                    Help keep Ikere-Ekiti spotless by reporting overflowing bins or illegal dumpsites.
+                    Help keep Ikere-Ekiti spotless by reporting overflowing bins
+                    or illegal dumpsites.
                   </p>
                 </div>
-                <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button
+                  asChild
+                  size="sm"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                >
                   <Link href="/report">Submit Your First Report</Link>
                 </Button>
               </div>
             ) : (
               <div className="divide-y">
                 {reports.map((report) => (
-                  <div key={report.id} className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-muted/10 transition-colors">
-                    <div className="flex items-start gap-3.5">
+                  <div
+                    key={report.id}
+                    className="p-0 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-muted/10 transition-colors"
+                  >
+                    <div className="flex items-center gap-3.5">
                       {report.imageUrl ? (
                         <img
                           src={report.imageUrl}
@@ -242,30 +280,36 @@ export default async function ResidentDashboardPage() {
 
                       <div className="space-y-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-semibold text-sm">{report.category}</span>
+                          <span className="font-semibold text-sm">
+                            {report.category}
+                          </span>
                           {statusBadge(report.status)}
                         </div>
 
                         {report.description && (
-                          <p className="text-xs text-muted-foreground line-clamp-1">
+                          <p className="text-sm text-muted-foreground line-clamp-1">
                             {report.description}
                           </p>
                         )}
 
                         <div className="flex flex-wrap items-center gap-3 text-[11px] text-muted-foreground pt-0.5">
                           <span className="flex items-center gap-1">
-                            <MapPin className="size-3 text-red-500" />
+                            <MapPin className="size-3" />
                             {report.quarter.replace("_", " ")}
-                            {report.address ? ` • ${report.address}` : ""}
+                            {report.address ? ` - ${report.address}` : ""}
                           </span>
-                          <span>•</span>
-                          <span>{new Date(report.createdAt).toLocaleDateString()}</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="size-3" />
+                            {new Date(report.createdAt).toLocaleDateString()}
+                          </span>
                         </div>
 
                         {report.adminNotes && (
-                          <div className="mt-2 p-2 rounded-md bg-muted/60 text-[11px] text-foreground flex items-start gap-1.5 border">
-                            <Truck className="size-3.5 text-blue-600 shrink-0 mt-0.5" />
-                            <span><strong>Admin Update:</strong> {report.adminNotes}</span>
+                          <div className="mt-2 p-2 rounded-md bg-muted/60 text-[11px] text-foreground flex items-center gap-1.5 border">
+                            <CircleAlert className="size-3.5 shrink-0" />
+                            <span>
+                              <strong>Admin Update:</strong> {report.adminNotes}
+                            </span>
                           </div>
                         )}
                       </div>
