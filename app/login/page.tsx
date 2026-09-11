@@ -77,7 +77,7 @@ export default function LoginPage() {
         <div className="flex flex-col items-center text-center space-y-1">
           <Link
             href="/"
-            className="flex items-center gap-2 font-bold text-xl tracking-tight mb-2"
+            className="flex items-center gap-2 font-bold text-xl tracking-tight mb-6"
           >
             <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-xs">
               <Trash2 className="size-5" />
@@ -87,7 +87,7 @@ export default function LoginPage() {
             </span>
           </Link>
           <h1 className="text-2xl font-bold tracking-tight">Welcome Back</h1>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Sign in to manage reports, schedules, and municipal operations
           </p>
         </div>
@@ -153,7 +153,7 @@ export default function LoginPage() {
             </CardContent>
 
             <CardFooter className="flex flex-col gap-3 pt-0 border-t bg-muted/30 p-4">
-              <div className="text-xs text-center text-muted-foreground">
+              <div className="text-sm text-center text-muted-foreground">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/register"
