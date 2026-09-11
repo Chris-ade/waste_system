@@ -188,7 +188,7 @@ export function ReportsClient({
     <div className="space-y-4">
       {/* Search & Filter Header Bar */}
       <Card className="border shadow-xs">
-        <CardContent className="p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
+        <CardContent className="px-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search className="size-4 absolute left-3 top-2.5 text-muted-foreground" />
             <Input
@@ -283,12 +283,9 @@ export function ReportsClient({
                             <Trash2 className="size-4" />
                           </div>
                         )}
-                        <div className="truncate max-w-[180px]">
+                        <div className="truncate max-w-[180px] text-[13px]">
                           <span className="font-semibold block truncate">
                             {report.category}
-                          </span>
-                          <span className="text-[10px] text-muted-foreground font-mono">
-                            ID: {report.id.slice(0, 8)}...
                           </span>
                         </div>
                       </div>
@@ -296,10 +293,10 @@ export function ReportsClient({
 
                     <td className="p-3.5">
                       <div className="space-y-0.5">
-                        <span className="font-medium block">
+                        <span className="font-medium block text-[13px]">
                           {report.quarter.replace("_", " ")}
                         </span>
-                        <span className="text-[11px] text-muted-foreground truncate max-w-[180px] block">
+                        <span className="text-[12px] text-muted-foreground truncate max-w-[180px] block">
                           {report.address || "Coordinates pinned"}
                         </span>
                       </div>
@@ -307,10 +304,10 @@ export function ReportsClient({
 
                     <td className="p-3.5">
                       <div>
-                        <span className="font-medium block">
+                        <span className="font-medium block text-[13px]">
                           {report.user?.name || "Anonymous"}
                         </span>
-                        <span className="text-[11px] text-muted-foreground">
+                        <span className="text-[12px] text-muted-foreground">
                           {report.user?.phone || "No phone"}
                         </span>
                       </div>

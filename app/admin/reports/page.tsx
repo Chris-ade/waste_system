@@ -46,9 +46,12 @@ export default async function AdminReportsPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Waste Incident Complaints</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          Review, filter, assign crews, and manage resolution statuses across all Ikere-Ekiti quarters
+        <h1 className="text-2xl font-bold tracking-tight">
+          Waste Incident Complaints
+        </h1>
+        <p className="text-sm text-muted-foreground mt-0.5">
+          Review, filter, assign crews, and manage resolution statuses across
+          all Ikere-Ekiti quarters
         </p>
       </div>
 

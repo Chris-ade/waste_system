@@ -1,4 +1,3 @@
-import { Truck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import prisma from "@/lib/prisma";
@@ -57,7 +56,6 @@ export default async function AdminMapPage() {
         <Card className="border shadow-xs">
           <CardHeader className="px-4 pt-2">
             <CardTitle className="text-md font-semibold flex items-center gap-2">
-              <Truck className="size-4 text-emerald-600" />
               North Corridor (Uro)
             </CardTitle>
           </CardHeader>
@@ -70,7 +68,6 @@ export default async function AdminMapPage() {
         <Card className="border shadow-xs">
           <CardHeader className="px-4 pt-2">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <Truck className="size-4 text-blue-600" />
               Commercial Spine (Oke-Osun & Odo-Oja)
             </CardTitle>
           </CardHeader>
@@ -84,7 +81,6 @@ export default async function AdminMapPage() {
         <Card className="border shadow-xs">
           <CardHeader className="px-4 pt-2">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <Truck className="size-4 text-amber-600" />
               South-East Cluster (Ogbontioro & Olowo-Ijesa)
             </CardTitle>
           </CardHeader>

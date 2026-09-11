@@ -18,9 +18,9 @@ export default async function AdminSchedulesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">
-            Quarter Pickup Schedules
+            Pickup Schedules
           </h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             Configure designated pickup timetables and crew dispatch assignments
             across Ikere quarters
           </p>
@@ -32,7 +32,7 @@ export default async function AdminSchedulesPage() {
           <Card key={schedule.id} className="border shadow-xs">
             <CardHeader className="py-2 px-4 pb-3">
               <div className="flex items-center justify-between">
-                <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">
+                <Badge className="bg-transparent p-0 text-black font-bold text-sm">
                   {schedule.dayOfWeek}
                 </Badge>
                 <span className="text-[11px] text-muted-foreground flex items-center gap-1">
@@ -46,15 +46,15 @@ export default async function AdminSchedulesPage() {
             </CardHeader>
             <CardContent className="p-4 pt-0 space-y-3 text-xs">
               <div className="p-3 rounded-lg bg-muted/40 border space-y-1">
-                <span className="text-muted-foreground block text-[11px]">
+                <span className="text-muted-foreground block text-[12px]">
                   Assigned Disposal Team
                 </span>
-                <span className="font-semibold text-foreground flex items-center gap-1.5">
-                  <Truck className="size-3.5 text-primary" />
+                <span className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
+                  <Truck className="size-4 text-primary" />
                   {schedule.crewAssigned || "Unassigned Unit"}
                 </span>
                 {schedule.crewUser && (
-                  <span className="text-muted-foreground block text-[11px]">
+                  <span className="text-muted-foreground block text-[12px]">
                     Crew Contact: {schedule.crewUser.name} (
                     {schedule.crewUser.phone || "No phone"})
                   </span>

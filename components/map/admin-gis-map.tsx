@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Layers, Filter } from "lucide-react";
+import { Loader2, Layers, Filter, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -74,7 +74,8 @@ export default function AdminGisMap({
       const map = L.map("admin-gis-map-container").setView([7.498, 5.231], 14);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19,
       }).addTo(map);
 
@@ -103,15 +104,17 @@ export default function AdminGisMap({
     layer.clearLayers();
 
     const filtered = reports.filter((r) => {
-      const quarterMatch = selectedQuarter === "ALL" || r.quarter === selectedQuarter;
-      const statusMatch = selectedStatus === "ALL" || r.status === selectedStatus;
+      const quarterMatch =
+        selectedQuarter === "ALL" || r.quarter === selectedQuarter;
+      const statusMatch =
+        selectedStatus === "ALL" || r.status === selectedStatus;
       return quarterMatch && statusMatch;
     });
 
     const statusColors: Record<string, string> = {
-      PENDING: "#ef4444",   // Red
-      ASSIGNED: "#3b82f6",  // Blue
-      RESOLVED: "#10b981",  // Green
+      PENDING: "#ef4444", // Red
+      ASSIGNED: "#3b82f6", // Blue
+      RESOLVED: "#10b981", // Green
     };
 
     filtered.forEach((report) => {
@@ -174,12 +177,16 @@ export default function AdminGisMap({
 
   useEffect(() => {
     const container = document.getElementById("admin-gis-map-container");
-    if (container && (container as any)._leaflet_map && (container as any)._leaflet_layer) {
+    if (
+      container &&
+      (container as any)._leaflet_map &&
+      (container as any)._leaflet_layer
+    ) {
       import("leaflet").then((L) => {
         renderMarkers(
           L.default,
           (container as any)._leaflet_map,
-          (container as any)._leaflet_layer
+          (container as any)._leaflet_layer,
         );
       });
     }
@@ -190,8 +197,10 @@ export default function AdminGisMap({
       {/* Map Filter Controls Bar */}
       <div className="p-3 border-b bg-card/80 backdrop-blur-md flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
-          <Layers className="size-4 text-primary" />
-          <span className="font-medium text-sm">Ikere-Ekiti Waste Heatmap & GIS Routes</span>
+          <Map className="size-4 text-primary" />
+          <span className="font-medium text-sm">
+            Ikere-Ekiti Waste Heatmap & GIS Routes
+          </span>
           <Badge variant="secondary" className="text-xs">
             {reports.length} Total Incidents
           </Badge>
@@ -251,7 +260,9 @@ export default function AdminGisMap({
       {loading && (
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/70 backdrop-blur-xs">
           <Loader2 className="size-7 animate-spin text-primary" />
-          <span className="mt-2 text-xs text-muted-foreground">Loading GIS Map Layer...</span>
+          <span className="mt-2 text-xs text-muted-foreground">
+            Loading GIS Map Layer...
+          </span>
         </div>
       )}
 

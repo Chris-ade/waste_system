@@ -53,11 +53,11 @@ export default async function AdminCrewPage() {
                 </Badge>
               </div>
               <CardTitle className="text-base mt-2">{crew.name}</CardTitle>
-              <CardDescription className="text-xs">
+              <CardDescription className="text-sm">
                 {crew.email}
               </CardDescription>
             </CardHeader>
-            <CardContent className="p-4 pt-0 space-y-2 text-xs">
+            <CardContent className="pt-0 space-y-2 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="size-3.5 text-primary" />
                 <span>{crew.phone || "No phone registered"}</span>
