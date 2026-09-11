@@ -452,7 +452,7 @@ export function ReportsClient({
               {/* Action Form */}
               <div className="space-y-3 pt-2">
                 <div className="space-y-1">
-                  <Label htmlFor="status-select" className="text-xs">
+                  <Label htmlFor="status-select" className="text-xs mb-2">
                     Update Operational Status
                   </Label>
                   <Select
@@ -477,7 +477,7 @@ export function ReportsClient({
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor="crew-select" className="text-xs">
+                  <Label htmlFor="crew-select" className="text-xs mb-2">
                     Assign Collection Crew
                   </Label>
                   <Select
@@ -509,7 +509,7 @@ export function ReportsClient({
                 </div>
 
                 <div className="space-y-1">
-                  <Label htmlFor="admin-notes" className="text-xs">
+                  <Label htmlFor="admin-notes" className="text-xs mb-2">
                     Admin / Dispatch Notes
                   </Label>
                   <Textarea
