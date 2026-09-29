@@ -294,7 +294,7 @@ export function ReportsClient({
                             <Trash2 className="size-4" />
                           </div>
                         )}
-                        <div className="truncate max-w-[180px] text-[13px]">
+                        <div className="truncate max-w-45 text-[13px]">
                           <span className="font-semibold block truncate">
                             {report.category}
                           </span>
@@ -307,7 +307,7 @@ export function ReportsClient({
                         <span className="font-medium block text-[13px]">
                           {report.quarter.replace("_", " ")}
                         </span>
-                        <span className="text-[12px] text-muted-foreground truncate max-w-[180px] block">
+                        <span className="text-[12px] text-muted-foreground truncate max-w-45 block">
                           {report.address || "Coordinates pinned"}
                         </span>
                       </div>
@@ -328,7 +328,7 @@ export function ReportsClient({
                       {report.crewAssigned ? (
                         <div className="flex items-center gap-1.5 font-medium">
                           <Truck className="size-3.5 shrink-0" />
-                          <span className="truncate max-w-[140px]">
+                          <span className="truncate max-w-35">
                             {report.crewAssigned.name}
                           </span>
                         </div>
@@ -478,7 +478,7 @@ export function ReportsClient({
                   <Select
                     items={modalStatusItems}
                     value={newStatus}
-                    onValueChange={(val) => val && setNewStatus(val as any)}
+                    onValueChange={(val) => val && setNewStatus(val)}
                   >
                     <SelectTrigger
                       id="status-select"
@@ -681,7 +681,8 @@ export function ReportsClient({
               <div className="p-3 rounded-xl border bg-card space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                    <MapPin className="size-3 text-emerald-600" /> Location Details
+                    <MapPin className="size-3 text-emerald-600" /> Location
+                    Details
                   </span>
                   <a
                     href={`https://www.google.com/maps?q=${viewingReport.latitude},${viewingReport.longitude}`}
@@ -693,7 +694,8 @@ export function ReportsClient({
                   </a>
                 </div>
                 <div className="text-foreground font-medium text-[13px]">
-                  {viewingReport.address || "No street address or landmark specified"}
+                  {viewingReport.address ||
+                    "No street address or landmark specified"}
                 </div>
                 <div className="font-mono text-[11px] text-muted-foreground">
                   Coordinates: {viewingReport.latitude.toFixed(6)},{" "}
@@ -735,7 +737,9 @@ export function ReportsClient({
                   {viewingReport.user?.email && (
                     <div className="flex items-center gap-1.5 text-muted-foreground text-[12px]">
                       <Mail className="size-3 shrink-0" />
-                      <span className="truncate">{viewingReport.user.email}</span>
+                      <span className="truncate">
+                        {viewingReport.user.email}
+                      </span>
                     </div>
                   )}
                 </div>

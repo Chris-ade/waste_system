@@ -6,7 +6,8 @@ import {
   CheckCircle2,
   MapPin,
   ArrowRight,
-  Layers,
+  User2,
+  Clock,
 } from "lucide-react";
 import {
   Card,
@@ -86,11 +87,10 @@ export default async function AdminOverviewPage() {
       {/* Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Municipal Command Center
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Ikere-Ekiti Waste & Refuse Operational Intelligence & GIS Dispatch
+            Dashboard summary of all incident reports and GIS mapping for
+            Ikere-Ekiti
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -114,7 +114,7 @@ export default async function AdminOverviewPage() {
       </div>
 
       {/* Metrics Cards conforming to admin-dashboard styling */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-4 xl:grid-cols-4 gap-4">
         <Card className="border shadow-xs">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
@@ -181,7 +181,7 @@ export default async function AdminOverviewPage() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-2xl font-bold text-emerald-600">
+              <CardTitle className="text-2xl font-bold">
                 {resolutionRate}%
               </CardTitle>
               <Badge className="bg-emerald-600/10 text-emerald-700 border-emerald-600/20 text-[10px] py-0">
@@ -204,13 +204,12 @@ export default async function AdminOverviewPage() {
                 Quarter Breakdown across Ikere-Ekiti
               </CardTitle>
               <CardDescription className="text-xs">
-                Incident density and reports logged per municipal administrative
-                quarter
+                Incident density and reports logged
               </CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="px-4">
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             {[
               { code: "URO", name: "Uro Quarter", count: quarterData.URO },
@@ -254,9 +253,8 @@ export default async function AdminOverviewPage() {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Layers className="size-4 text-emerald-600" />
             <h2 className="text-base font-bold tracking-tight">
-              Active GIS Incident Locations
+              Active Incident Locations
             </h2>
           </div>
           <Link
@@ -287,15 +285,17 @@ export default async function AdminOverviewPage() {
           </Button>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="divide-y">
+          <div className="divide-y p-0">
             {recentReports.map((report) => (
               <div
                 key={report.id}
-                className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs hover:bg-muted/10 transition-colors"
+                className="px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs hover:bg-muted/10 transition-colors"
               >
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">{report.category}</span>
+                    <span className="font-semibold text-[14px]">
+                      {report.category}
+                    </span>
                     <Badge
                       variant="outline"
                       className={`text-[10px] ${
@@ -309,15 +309,18 @@ export default async function AdminOverviewPage() {
                       {report.status}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-3 text-muted-foreground text-[11px]">
-                    <span>Quarter: {report.quarter.replace("_", " ")}</span>
-                    <span>•</span>
+                  <div className="flex flex-col gap-1 text-muted-foreground text-[12px]">
                     <span>
-                      Reporter: {report.user?.name || "Guest Resident"}
-                    </span>
-                    <span>•</span>
-                    <span>
+                      <Clock className="size-3.5 inline-block mr-1" />
                       {new Date(report.createdAt).toLocaleDateString()}
+                    </span>
+                    <span>
+                      <MapPin className="size-3.5 inline-block mr-1" />
+                      Quarter: {report.quarter.replace("_", " ")}
+                    </span>
+                    <span>
+                      <User2 className="size-3.5 inline-block mr-1" />
+                      Reporter: {report.user?.name || "Guest Resident"}
                     </span>
                   </div>
                 </div>
