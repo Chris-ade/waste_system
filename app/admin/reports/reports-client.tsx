@@ -563,7 +563,7 @@ export function ReportsClient({
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
-            {/* Quarter Filter with Shadcn Select */}
+            {/* Quarter Filter */}
             <Select
               items={quarterFilterItems}
               value={selectedQuarter}
@@ -586,7 +586,7 @@ export function ReportsClient({
               </SelectContent>
             </Select>
 
-            {/* Status Filter with Shadcn Select */}
+            {/* Status Filter */}
             <Select
               items={statusFilterItems}
               value={selectedStatus}
@@ -685,7 +685,7 @@ export function ReportsClient({
         </CardContent>
       </Card>
 
-      {/* Shadcn UI Data Table */}
+      {/* Data Table */}
       <Card className="border shadow-xs overflow-hidden">
         <Table>
           <TableHeader>
@@ -751,7 +751,7 @@ export function ReportsClient({
           </TableBody>
         </Table>
 
-        {/* Shadcn UI Data Table Pagination Bar */}
+        {/* Data Table Pagination Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t px-4 py-3 bg-muted/10 text-xs">
           <div className="text-muted-foreground">
             Showing{" "}
@@ -851,7 +851,7 @@ export function ReportsClient({
         </div>
       </Card>
 
-      {/* Detail & Action Modal Using ResponsiveDialog (Dialog on desktop, Drawer on mobile) */}
+      {/* Detail & Action Modal */}
       <ResponsiveDialog
         open={!!activeReport}
         onOpenChange={(open) => !open && setActiveReport(null)}

@@ -113,7 +113,7 @@ export default async function AdminOverviewPage() {
         </div>
       </div>
 
-      {/* Metrics Cards conforming to admin-dashboard styling */}
+      {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-4 xl:grid-cols-4 gap-4">
         <Card className="border shadow-xs">
           <CardHeader className="pb-2">
