@@ -1,6 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { format } from "date-fns";
+import { cn } from "cn";
+import {
+  ColumnDef,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import {
   Search,
   Trash2,
@@ -16,8 +28,17 @@ import {
   ExternalLink,
   FileText,
   AlertCircle,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  SlidersHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  RotateCcw,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -30,6 +51,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   ResponsiveDialog,
   ResponsiveDialogBody,
@@ -181,32 +218,344 @@ export function ReportsClient({
     }
   };
 
-  const filteredReports = reports.filter((r) => {
-    const quarterMatch =
-      selectedQuarter === "ALL" || r.quarter === selectedQuarter;
-    const statusMatch = selectedStatus === "ALL" || r.status === selectedStatus;
-    const searchMatch =
-      !search ||
-      r.category.toLowerCase().includes(search.toLowerCase()) ||
-      r.description?.toLowerCase().includes(search.toLowerCase()) ||
-      r.address?.toLowerCase().includes(search.toLowerCase()) ||
-      r.user?.name.toLowerCase().includes(search.toLowerCase());
+  const filteredReports = useMemo(() => {
+    return reports.filter((r) => {
+      const quarterMatch =
+        selectedQuarter === "ALL" || r.quarter === selectedQuarter;
+      const statusMatch = selectedStatus === "ALL" || r.status === selectedStatus;
+      const searchMatch =
+        !search ||
+        r.category.toLowerCase().includes(search.toLowerCase()) ||
+        r.description?.toLowerCase().includes(search.toLowerCase()) ||
+        r.address?.toLowerCase().includes(search.toLowerCase()) ||
+        r.user?.name.toLowerCase().includes(search.toLowerCase());
 
-    return quarterMatch && statusMatch && searchMatch;
+      return quarterMatch && statusMatch && searchMatch;
+    });
+  }, [reports, selectedQuarter, selectedStatus, search]);
+
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: "createdAt", desc: true },
+  ]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const columns = useMemo<ColumnDef<WasteReport>[]>(
+    () => [
+      {
+        accessorKey: "category",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 text-xs font-semibold hover:bg-muted/50"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Category & Photo
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown className="ml-1.5 size-3.5" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp className="ml-1.5 size-3.5" />
+            ) : (
+              <ArrowUpDown className="ml-1.5 size-3.5 text-muted-foreground/60" />
+            )}
+          </Button>
+        ),
+        cell: ({ row }) => {
+          const report = row.original;
+          return (
+            <div className="flex items-center gap-2.5">
+              {report.imageUrl ? (
+                <button
+                  type="button"
+                  onClick={() => setViewingReport(report)}
+                  className="group relative size-10 rounded-md overflow-hidden border shrink-0 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-ring"
+                  title="Click to view full photo"
+                >
+                  <img
+                    src={report.imageUrl}
+                    alt="thumbnail"
+                    className="size-full object-cover transition-transform group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Eye className="size-3.5 text-white" />
+                  </div>
+                </button>
+              ) : (
+                <div className="size-10 rounded-md bg-muted flex items-center justify-center shrink-0 text-muted-foreground border">
+                  <Trash2 className="size-4" />
+                </div>
+              )}
+              <div className="truncate max-w-45 text-[13px]">
+                <span className="font-semibold block truncate text-foreground">
+                  {report.category}
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground block truncate">
+                  #{report.id.slice(-6)}
+                </span>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "quarter",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 text-xs font-semibold hover:bg-muted/50"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Quarter & Location
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown className="ml-1.5 size-3.5" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp className="ml-1.5 size-3.5" />
+            ) : (
+              <ArrowUpDown className="ml-1.5 size-3.5 text-muted-foreground/60" />
+            )}
+          </Button>
+        ),
+        cell: ({ row }) => {
+          const report = row.original;
+          return (
+            <div className="space-y-0.5">
+              <span className="font-medium block text-[13px] text-foreground">
+                {report.quarter.replace("_", " ")}
+              </span>
+              <span className="text-[12px] text-muted-foreground truncate max-w-48 block">
+                {report.address || "Coordinates pinned"}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        id: "reporter",
+        accessorFn: (row) => row.user?.name || "Anonymous",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 text-xs font-semibold hover:bg-muted/50"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Reporter
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown className="ml-1.5 size-3.5" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp className="ml-1.5 size-3.5" />
+            ) : (
+              <ArrowUpDown className="ml-1.5 size-3.5 text-muted-foreground/60" />
+            )}
+          </Button>
+        ),
+        cell: ({ row }) => {
+          const report = row.original;
+          return (
+            <div>
+              <span className="font-medium block text-[13px] text-foreground">
+                {report.user?.name || "Anonymous"}
+              </span>
+              <span className="text-[12px] text-muted-foreground block">
+                {report.user?.phone || "No phone"}
+              </span>
+            </div>
+          );
+        },
+      },
+      {
+        id: "crewAssigned",
+        accessorFn: (row) => row.crewAssigned?.name || "Unassigned",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 text-xs font-semibold hover:bg-muted/50"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Assigned Crew
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown className="ml-1.5 size-3.5" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp className="ml-1.5 size-3.5" />
+            ) : (
+              <ArrowUpDown className="ml-1.5 size-3.5 text-muted-foreground/60" />
+            )}
+          </Button>
+        ),
+        cell: ({ row }) => {
+          const report = row.original;
+          return report.crewAssigned ? (
+            <div className="flex items-center gap-1.5 font-medium text-[13px]">
+              <Truck className="size-3.5 text-emerald-600 shrink-0" />
+              <span className="truncate max-w-35 text-foreground">
+                {report.crewAssigned.name}
+              </span>
+            </div>
+          ) : (
+            <span className="text-muted-foreground text-xs italic">
+              Unassigned
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "status",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 text-xs font-semibold hover:bg-muted/50"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Status
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown className="ml-1.5 size-3.5" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp className="ml-1.5 size-3.5" />
+            ) : (
+              <ArrowUpDown className="ml-1.5 size-3.5 text-muted-foreground/60" />
+            )}
+          </Button>
+        ),
+        cell: ({ row }) => {
+          const status = row.original.status;
+          return (
+            <Badge
+              variant="outline"
+              className={`text-[10px] font-semibold tracking-wide uppercase ${
+                status === "RESOLVED"
+                  ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                  : status === "ASSIGNED"
+                    ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
+                    : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+              }`}
+            >
+              {status}
+            </Badge>
+          );
+        },
+      },
+      {
+        accessorKey: "createdAt",
+        header: ({ column }) => (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 text-xs font-semibold hover:bg-muted/50"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Date Logged
+            {column.getIsSorted() === "desc" ? (
+              <ArrowDown className="ml-1.5 size-3.5" />
+            ) : column.getIsSorted() === "asc" ? (
+              <ArrowUp className="ml-1.5 size-3.5" />
+            ) : (
+              <ArrowUpDown className="ml-1.5 size-3.5 text-muted-foreground/60" />
+            )}
+          </Button>
+        ),
+        cell: ({ row }) => {
+          const rawDate = row.original.createdAt;
+          let formattedDate = "";
+          try {
+            const date = new Date(rawDate);
+            formattedDate = isNaN(date.getTime())
+              ? String(rawDate)
+              : format(date, "MMM d, yyyy");
+          } catch {
+            formattedDate = String(rawDate);
+          }
+          return (
+            <span
+              suppressHydrationWarning
+              className="text-[12px] text-muted-foreground whitespace-nowrap"
+            >
+              {formattedDate}
+            </span>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: () => (
+          <div className="text-right text-xs font-semibold pr-2">Actions</div>
+        ),
+        cell: ({ row }) => {
+          const report = row.original;
+          return (
+            <div className="flex gap-1.5 justify-end w-full">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs px-2.5"
+                onClick={() => setViewingReport(report)}
+              >
+                <Eye className="size-3.5 mr-1" />
+                View
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-8 text-xs px-2.5"
+                onClick={() => openActionModal(report)}
+              >
+                <Edit className="size-3.5 mr-1" />
+                Manage
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="h-8 text-xs px-2 text-destructive hover:bg-destructive/10"
+                onClick={() => handleDelete(report.id)}
+                title="Delete report"
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
+
+  const table = useReactTable({
+    data: filteredReports,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      pagination,
+    },
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
     <div className="space-y-4">
       {/* Search & Filter Header Bar */}
       <Card className="border shadow-xs">
-        <CardContent className="px-4 flex flex-col md:flex-row gap-3 items-center justify-between">
+        <CardContent className="px-4 py-3 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search className="size-4 absolute left-3 top-2.5 text-muted-foreground" />
             <Input
               placeholder="Search category, location, reporter..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 text-xs"
+              onChange={(e) => {
+                setSearch(e.target.value);
+                table.setPageIndex(0);
+              }}
+              className="pl-9 text-xs h-9 bg-background"
             />
           </div>
 
@@ -215,7 +564,12 @@ export function ReportsClient({
             <Select
               items={quarterFilterItems}
               value={selectedQuarter}
-              onValueChange={(val) => val && setSelectedQuarter(val)}
+              onValueChange={(val) => {
+                if (val) {
+                  setSelectedQuarter(val);
+                  table.setPageIndex(0);
+                }
+              }}
             >
               <SelectTrigger className="h-9 text-xs min-w-36 bg-background">
                 <SelectValue placeholder="Quarter" />
@@ -233,7 +587,12 @@ export function ReportsClient({
             <Select
               items={statusFilterItems}
               value={selectedStatus}
-              onValueChange={(val) => val && setSelectedStatus(val)}
+              onValueChange={(val) => {
+                if (val) {
+                  setSelectedStatus(val);
+                  table.setPageIndex(0);
+                }
+              }}
             >
               <SelectTrigger className="h-9 text-xs min-w-36 bg-background">
                 <SelectValue placeholder="Status" />
@@ -246,154 +605,243 @@ export function ReportsClient({
                 ))}
               </SelectContent>
             </Select>
+
+            {/* Column Visibility Toggle */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(
+                  buttonVariants({ variant: "outline", size: "sm" }),
+                  "h-9 text-xs gap-1.5 bg-background cursor-pointer"
+                )}
+              >
+                <SlidersHorizontal className="size-3.5" />
+                <span>Columns</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuLabel className="text-xs">
+                  Toggle Columns
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {table
+                  .getAllColumns()
+                  .filter(
+                    (column) => column.id !== "actions" && column.getCanHide()
+                  )
+                  .map((column) => {
+                    const label =
+                      column.id === "category"
+                        ? "Category & Photo"
+                        : column.id === "quarter"
+                          ? "Quarter & Location"
+                          : column.id === "reporter"
+                            ? "Reporter"
+                            : column.id === "crewAssigned"
+                              ? "Assigned Crew"
+                              : column.id === "status"
+                                ? "Status"
+                                : column.id === "createdAt"
+                                  ? "Date Logged"
+                                  : column.id;
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="text-xs capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {label}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Reset Filters button if any active */}
+            {(search ||
+              selectedQuarter !== "ALL" ||
+              selectedStatus !== "ALL") && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-9 text-xs px-2.5 text-muted-foreground hover:text-foreground gap-1"
+                onClick={() => {
+                  setSearch("");
+                  setSelectedQuarter("ALL");
+                  setSelectedStatus("ALL");
+                  table.setPageIndex(0);
+                }}
+                title="Reset all filters"
+              >
+                <RotateCcw className="size-3" />
+                <span>Reset</span>
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Reports Table */}
+      {/* Shadcn UI Data Table */}
       <Card className="border shadow-xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b bg-muted/40 text-muted-foreground font-semibold">
-                <th className="p-3.5">Category & Photo</th>
-                <th className="p-3.5">Quarter & Address</th>
-                <th className="p-3.5">Reporter</th>
-                <th className="p-3.5">Assigned Crew</th>
-                <th className="p-3.5">Status</th>
-                <th className="p-3.5">Date</th>
-                <th className="p-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {filteredReports.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="p-8 text-center text-muted-foreground"
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow
+                key={headerGroup.id}
+                className="bg-muted/40 hover:bg-muted/40 border-b"
+              >
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="px-3.5 py-2.5 text-xs font-semibold text-foreground"
                   >
-                    No reports found matching your criteria.
-                  </td>
-                </tr>
-              ) : (
-                filteredReports.map((report) => (
-                  <tr
-                    key={report.id}
-                    className="hover:bg-muted/10 transition-colors"
-                  >
-                    <td className="p-3.5">
-                      <div className="flex items-center gap-2.5">
-                        {report.imageUrl ? (
-                          <img
-                            src={report.imageUrl}
-                            alt="thumb"
-                            className="size-10 rounded-md object-cover border shrink-0"
-                          />
-                        ) : (
-                          <div className="size-10 rounded-md bg-muted flex items-center justify-center shrink-0 text-muted-foreground">
-                            <Trash2 className="size-4" />
-                          </div>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
                         )}
-                        <div className="truncate max-w-45 text-[13px]">
-                          <span className="font-semibold block truncate">
-                            {report.category}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="p-3.5">
-                      <div className="space-y-0.5">
-                        <span className="font-medium block text-[13px]">
-                          {report.quarter.replace("_", " ")}
-                        </span>
-                        <span className="text-[12px] text-muted-foreground truncate max-w-45 block">
-                          {report.address || "Coordinates pinned"}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="p-3.5">
-                      <div>
-                        <span className="font-medium block text-[13px]">
-                          {report.user?.name || "Anonymous"}
-                        </span>
-                        <span className="text-[12px] text-muted-foreground">
-                          {report.user?.phone || "No phone"}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="p-3.5">
-                      {report.crewAssigned ? (
-                        <div className="flex items-center gap-1.5 font-medium">
-                          <Truck className="size-3.5 shrink-0" />
-                          <span className="truncate max-w-35">
-                            {report.crewAssigned.name}
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-[11px]">
-                          Unassigned
-                        </span>
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  className="hover:bg-muted/20 transition-colors border-b last:border-b-0"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="p-3.5 text-xs">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
                       )}
-                    </td>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-40 text-center text-muted-foreground"
+                >
+                  <div className="flex flex-col items-center justify-center gap-2 py-8">
+                    <div className="size-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                      <Trash2 className="size-5" />
+                    </div>
+                    <p className="text-sm font-semibold text-foreground">
+                      No reports found
+                    </p>
+                    <p className="text-xs text-muted-foreground max-w-sm">
+                      No waste incidents match your current filter and search criteria.
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
 
-                    <td className="p-3.5">
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${
-                          report.status === "RESOLVED"
-                            ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
-                            : report.status === "ASSIGNED"
-                              ? "bg-blue-500/10 text-blue-600 border-blue-500/20"
-                              : "bg-amber-500/10 text-amber-600 border-amber-500/20"
-                        }`}
-                      >
-                        {report.status}
-                      </Badge>
-                    </td>
-
-                    <td className="p-3.5 text-muted-foreground">
-                      {new Date(report.createdAt).toLocaleDateString()}
-                    </td>
-
-                    <td className="p-3.5 space-x-1">
-                      <div className="flex gap-1.5 justify-end w-full">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 text-xs px-2.5"
-                          onClick={() => setViewingReport(report)}
-                        >
-                          <Eye className="size-3 mr-1" />
-                          View
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 text-xs px-2.5"
-                          onClick={() => openActionModal(report)}
-                        >
-                          <Edit className="size-3 mr-1" />
-                          Manage
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-7 text-xs px-2 text-destructive hover:bg-destructive/10"
-                          onClick={() => handleDelete(report.id)}
-                          title="Delete report"
-                        >
-                          <Trash2 className="size-3" />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+        {/* Shadcn UI Data Table Pagination Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t px-4 py-3 bg-muted/10 text-xs">
+          <div className="text-muted-foreground">
+            Showing{" "}
+            <span className="font-semibold text-foreground">
+              {filteredReports.length === 0
+                ? 0
+                : table.getState().pagination.pageIndex *
+                    table.getState().pagination.pageSize +
+                  1}
+            </span>{" "}
+            to{" "}
+            <span className="font-semibold text-foreground">
+              {Math.min(
+                (table.getState().pagination.pageIndex + 1) *
+                  table.getState().pagination.pageSize,
+                filteredReports.length
               )}
-            </tbody>
-          </table>
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-foreground">
+              {filteredReports.length}
+            </span>{" "}
+            reports
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground whitespace-nowrap">
+                Rows per page
+              </span>
+              <Select
+                items={{ "5": "5", "10": "10", "20": "20", "50": "50" }}
+                value={`${table.getState().pagination.pageSize}`}
+                onValueChange={(val) => {
+                  if (val) table.setPageSize(Number(val));
+                }}
+              >
+                <SelectTrigger className="h-8 w-16 text-xs bg-background">
+                  <SelectValue placeholder={`${table.getState().pagination.pageSize}`} />
+                </SelectTrigger>
+                <SelectContent>
+                  {["5", "10", "20", "50"].map((pageSize) => (
+                    <SelectItem key={pageSize} value={pageSize}>
+                      {pageSize}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="text-muted-foreground min-w-20 text-center font-medium">
+              Page {table.getState().pagination.pageIndex + 1} of{" "}
+              {Math.max(1, table.getPageCount())}
+            </div>
+
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                className="hidden size-8 p-0 sm:flex"
+                onClick={() => table.setPageIndex(0)}
+                disabled={!table.getCanPreviousPage()}
+                title="First page"
+              >
+                <ChevronsLeft className="size-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8 p-0"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                title="Previous page"
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="size-8 p-0"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                title="Next page"
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+              <Button
+                variant="outline"
+                className="hidden size-8 p-0 sm:flex"
+                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                disabled={!table.getCanNextPage()}
+                title="Last page"
+              >
+                <ChevronsRight className="size-4" />
+              </Button>
+            </div>
+          </div>
         </div>
       </Card>
 
@@ -595,13 +1043,22 @@ export function ReportsClient({
               )}
             </div>
             <ResponsiveDialogDescription className="font-mono text-[11px]">
-              Ref: #{viewingReport?.id} • Submitted on{" "}
-              {viewingReport
-                ? new Date(viewingReport.createdAt).toLocaleString(undefined, {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })
-                : ""}
+              Ref: #{viewingReport?.id}
+              {viewingReport?.createdAt && (
+                <>
+                  {" "}• Submitted on{" "}
+                  {(() => {
+                    try {
+                      const d = new Date(viewingReport.createdAt);
+                      return isNaN(d.getTime())
+                        ? ""
+                        : format(d, "MMM d, yyyy, h:mm a");
+                    } catch {
+                      return "";
+                    }
+                  })()}
+                </>
+              )}
             </ResponsiveDialogDescription>
           </ResponsiveDialogHeader>
 
@@ -672,7 +1129,16 @@ export function ReportsClient({
                     Date Logged
                   </span>
                   <span className="font-medium text-foreground text-xs sm:text-sm">
-                    {new Date(viewingReport.createdAt).toLocaleDateString()}
+                    {(() => {
+                      try {
+                        const d = new Date(viewingReport.createdAt);
+                        return isNaN(d.getTime())
+                          ? "N/A"
+                          : format(d, "MMM d, yyyy");
+                      } catch {
+                        return "N/A";
+                      }
+                    })()}
                   </span>
                 </div>
               </div>
