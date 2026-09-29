@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
+import Image from "next/image";
 import { format } from "date-fns";
 import { cn } from "cn";
 import {
@@ -157,13 +158,13 @@ export function ReportsClient({
     ),
   };
 
-  const openActionModal = (report: WasteReport) => {
+  const openActionModal = useCallback((report: WasteReport) => {
     setActiveReport(report);
     setNewStatus(report.status);
     setAssignedCrewId(report.crewAssigned?.id || "NONE");
     setNotes(report.adminNotes || "");
     setMessage(null);
-  };
+  }, []);
 
   const handleUpdate = async () => {
     if (!activeReport) return;
@@ -200,29 +201,28 @@ export function ReportsClient({
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = useCallback(async (id: string) => {
     if (!confirm("Are you sure you want to delete this waste report?")) return;
 
     try {
       const res = await fetch(`/api/reports/${id}`, { method: "DELETE" });
       if (res.ok) {
         setReports((prev) => prev.filter((r) => r.id !== id));
-        if (activeReport?.id === id) {
-          setActiveReport(null);
-        }
+        setActiveReport((current) => (current?.id === id ? null : current));
       } else {
         alert("Failed to delete report.");
       }
     } catch {
       alert("Error deleting report.");
     }
-  };
+  }, []);
 
   const filteredReports = useMemo(() => {
     return reports.filter((r) => {
       const quarterMatch =
         selectedQuarter === "ALL" || r.quarter === selectedQuarter;
-      const statusMatch = selectedStatus === "ALL" || r.status === selectedStatus;
+      const statusMatch =
+        selectedStatus === "ALL" || r.status === selectedStatus;
       const searchMatch =
         !search ||
         r.category.toLowerCase().includes(search.toLowerCase()) ||
@@ -275,9 +275,12 @@ export function ReportsClient({
                   className="group relative size-10 rounded-md overflow-hidden border shrink-0 cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-ring"
                   title="Click to view full photo"
                 >
-                  <img
+                  <Image
                     src={report.imageUrl}
-                    alt="thumbnail"
+                    alt={report.category || "thumbnail"}
+                    fill
+                    unoptimized
+                    sizes="40px"
                     className="size-full object-cover transition-transform group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -357,7 +360,7 @@ export function ReportsClient({
         cell: ({ row }) => {
           const report = row.original;
           return (
-            <div>
+            <div className="space-y-1">
               <span className="font-medium block text-[13px] text-foreground">
                 {report.user?.name || "Anonymous"}
               </span>
@@ -392,8 +395,7 @@ export function ReportsClient({
           const report = row.original;
           return report.crewAssigned ? (
             <div className="flex items-center gap-1.5 font-medium text-[13px]">
-              <Truck className="size-3.5 text-emerald-600 shrink-0" />
-              <span className="truncate max-w-35 text-foreground">
+              <span className="text-foreground">
                 {report.crewAssigned.name}
               </span>
             </div>
@@ -522,9 +524,10 @@ export function ReportsClient({
         },
       },
     ],
-    []
+    [openActionModal, handleDelete],
   );
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: filteredReports,
     columns,
@@ -545,7 +548,7 @@ export function ReportsClient({
     <div className="space-y-4">
       {/* Search & Filter Header Bar */}
       <Card className="border shadow-xs">
-        <CardContent className="px-4 py-3 flex flex-col md:flex-row gap-3 items-center justify-between">
+        <CardContent className="px-4 flex flex-col md:flex-row gap-3 items-center justify-between">
           <div className="relative w-full md:w-80">
             <Search className="size-4 absolute left-3 top-2.5 text-muted-foreground" />
             <Input
@@ -611,7 +614,7 @@ export function ReportsClient({
               <DropdownMenuTrigger
                 className={cn(
                   buttonVariants({ variant: "outline", size: "sm" }),
-                  "h-9 text-xs gap-1.5 bg-background cursor-pointer"
+                  "h-9 text-xs gap-1.5 bg-background cursor-pointer",
                 )}
               >
                 <SlidersHorizontal className="size-3.5" />
@@ -625,7 +628,7 @@ export function ReportsClient({
                 {table
                   .getAllColumns()
                   .filter(
-                    (column) => column.id !== "actions" && column.getCanHide()
+                    (column) => column.id !== "actions" && column.getCanHide(),
                   )
                   .map((column) => {
                     const label =
@@ -700,7 +703,7 @@ export function ReportsClient({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -718,7 +721,7 @@ export function ReportsClient({
                     <TableCell key={cell.id} className="p-3.5 text-xs">
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -738,7 +741,8 @@ export function ReportsClient({
                       No reports found
                     </p>
                     <p className="text-xs text-muted-foreground max-w-sm">
-                      No waste incidents match your current filter and search criteria.
+                      No waste incidents match your current filter and search
+                      criteria.
                     </p>
                   </div>
                 </TableCell>
@@ -763,7 +767,7 @@ export function ReportsClient({
               {Math.min(
                 (table.getState().pagination.pageIndex + 1) *
                   table.getState().pagination.pageSize,
-                filteredReports.length
+                filteredReports.length,
               )}
             </span>{" "}
             of{" "}
@@ -786,7 +790,9 @@ export function ReportsClient({
                 }}
               >
                 <SelectTrigger className="h-8 w-16 text-xs bg-background">
-                  <SelectValue placeholder={`${table.getState().pagination.pageSize}`} />
+                  <SelectValue
+                    placeholder={`${table.getState().pagination.pageSize}`}
+                  />
                 </SelectTrigger>
                 <SelectContent>
                   {["5", "10", "20", "50"].map((pageSize) => (
@@ -869,11 +875,14 @@ export function ReportsClient({
 
               {/* Photo Evidence if available */}
               {activeReport.imageUrl && (
-                <div className="rounded-xl overflow-hidden border">
-                  <img
+                <div className="relative w-full h-48 rounded-xl overflow-hidden border">
+                  <Image
                     src={activeReport.imageUrl}
                     alt="Waste Evidence"
-                    className="w-full h-48 object-cover"
+                    fill
+                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    className="object-cover"
                   />
                 </div>
               )}
@@ -1046,7 +1055,8 @@ export function ReportsClient({
               Ref: #{viewingReport?.id}
               {viewingReport?.createdAt && (
                 <>
-                  {" "}• Submitted on{" "}
+                  {" "}
+                  • Submitted on{" "}
                   {(() => {
                     try {
                       const d = new Date(viewingReport.createdAt);
@@ -1070,11 +1080,14 @@ export function ReportsClient({
                   Photo Evidence
                 </span>
                 {viewingReport.imageUrl ? (
-                  <div className="relative rounded-xl overflow-hidden border bg-muted/20 group">
-                    <img
+                  <div className="relative w-full h-80 sm:h-96 rounded-xl overflow-hidden border bg-muted/20 group">
+                    <Image
                       src={viewingReport.imageUrl}
                       alt="Waste Evidence"
-                      className="w-full max-h-80 sm:max-h-96 object-contain mx-auto bg-black/5"
+                      fill
+                      unoptimized
+                      sizes="(max-width: 768px) 100vw, 800px"
+                      className="object-contain mx-auto bg-black/5"
                     />
                     <div className="absolute bottom-2 right-2">
                       <a
