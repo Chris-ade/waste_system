@@ -40,11 +40,11 @@ export default async function AdminCrewPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {crewMembers.map((crew) => (
           <Card key={crew.id} className="border shadow-xs">
-            <CardHeader className="py-2 px-4 pb-3">
+            <CardHeader className="py-2 px-4 pb-0">
               <div className="flex items-center justify-between">
                 <Badge
                   variant="outline"
-                  className="text-xs bg-blue-500/10 text-blue-600 border-blue-500/20"
+                  className="text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
                 >
                   Field Crew
                 </Badge>
@@ -57,7 +57,7 @@ export default async function AdminCrewPage() {
                 {crew.email}
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-0 space-y-2 text-sm">
+            <CardContent className="pt-0 space-y-1 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Phone className="size-3.5 text-primary" />
                 <span>{crew.phone || "No phone registered"}</span>

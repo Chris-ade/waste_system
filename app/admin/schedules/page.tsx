@@ -29,39 +29,40 @@ export default async function AdminSchedulesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {schedules.map((schedule) => (
-          <Card key={schedule.id} className="border shadow-xs">
-            <CardHeader className="py-2 px-4 pb-3">
-              <div className="flex items-center justify-between">
-                <Badge className="bg-transparent p-0 text-black font-bold text-sm">
-                  {schedule.dayOfWeek}
-                </Badge>
-                <span className="text-[11px] text-muted-foreground flex items-center gap-1">
-                  <Clock className="size-3" />
-                  {schedule.timeSlot || "07:00 AM - 11:00 AM"}
-                </span>
-              </div>
-              <CardTitle className="text-base mt-2">
-                {schedule.quarter.replace("_", " ")} Quarter
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 pt-0 space-y-3 text-xs">
-              <div className="p-3 rounded-lg bg-muted/40 border space-y-1">
-                <span className="text-muted-foreground block text-[12px]">
-                  Assigned Disposal Team
-                </span>
-                <span className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
-                  <Truck className="size-4 text-primary" />
-                  {schedule.crewAssigned || "Unassigned Unit"}
-                </span>
-                {schedule.crewUser && (
-                  <span className="text-muted-foreground block text-[12px]">
-                    Crew Contact: {schedule.crewUser.name} (
-                    {schedule.crewUser.phone || "No phone"})
+          <div className="shadow-xs border" key={schedule.id}>
+            <Card className="rounded-none">
+              <CardHeader className="px-4 pb-3">
+                <div className="flex items-center justify-between">
+                  <Badge className="bg-transparent p-0 text-black font-bold text-sm">
+                    {schedule.dayOfWeek}
+                  </Badge>
+                  <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                    <Clock className="size-3" />
+                    {schedule.timeSlot || "07:00 AM - 11:00 AM"}
                   </span>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+                <CardTitle className="text-base mt-2">
+                  {schedule.quarter.replace("_", " ")} Quarter
+                </CardTitle>
+              </CardHeader>
+            </Card>
+
+            <div className="p-3 bg-muted/40 border space-y-1">
+              <span className="text-muted-foreground block text-[12px]">
+                Assigned Disposal Team
+              </span>
+              <span className="font-semibold text-foreground flex items-center gap-1.5 text-sm">
+                <Truck className="size-4 text-primary" />
+                {schedule.crewAssigned || "Unassigned Unit"}
+              </span>
+              {schedule.crewUser && (
+                <span className="text-muted-foreground block text-[12px]">
+                  Crew Contact: {schedule.crewUser.name} (
+                  {schedule.crewUser.phone || "No phone"})
+                </span>
+              )}
+            </div>
+          </div>
         ))}
       </div>
     </div>

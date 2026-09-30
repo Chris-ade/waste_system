@@ -182,7 +182,7 @@ export default async function ResidentDashboardPage() {
               <CardDescription className="text-xs">
                 Pending Review
               </CardDescription>
-              <CardTitle className="text-2xl font-bold text-amber-600">
+              <CardTitle className="text-2xl font-bold">
                 {pendingReports}
               </CardTitle>
             </CardHeader>
@@ -196,7 +196,7 @@ export default async function ResidentDashboardPage() {
               <CardDescription className="text-xs">
                 Assigned to Crew
               </CardDescription>
-              <CardTitle className="text-2xl font-bold text-blue-600">
+              <CardTitle className="text-2xl font-bold">
                 {assignedReports}
               </CardTitle>
             </CardHeader>
@@ -210,7 +210,7 @@ export default async function ResidentDashboardPage() {
               <CardDescription className="text-xs">
                 Resolved & Cleared
               </CardDescription>
-              <CardTitle className="text-2xl font-bold text-emerald-600">
+              <CardTitle className="text-2xl font-bold">
                 {resolvedReports}
               </CardTitle>
             </CardHeader>
@@ -316,8 +316,8 @@ export default async function ResidentDashboardPage() {
                     </div>
 
                     <div className="text-right shrink-0 w-full sm:w-auto">
-                      <span className="font-mono text-[10px] text-muted-foreground block">
-                        ID: {report.id.slice(0, 10)}...
+                      <span className="font-mono text-[12px] text-muted-foreground block">
+                        ID: {report.id}
                       </span>
                     </div>
                   </div>

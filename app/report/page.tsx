@@ -44,7 +44,7 @@ const LocationPickerMap = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-[380px] w-full rounded-xl border flex flex-col items-center justify-center bg-muted/30">
+      <div className="h-95 w-full rounded-xl border flex flex-col items-center justify-center bg-muted/30">
         <Loader2 className="size-6 animate-spin text-primary" />
         <span className="mt-2 text-xs text-muted-foreground">
           Initializing Ikere-Ekiti Map...
@@ -80,8 +80,6 @@ const quarterItems: Record<string, string> = Object.fromEntries(
 );
 
 export default function ReportWastePage() {
-  const router = useRouter();
-
   // Multi-step: 1 = Details, 2 = Photo, 3 = Location, 4 = Review & Submit
   const [step, setStep] = useState(1);
 
@@ -258,7 +256,9 @@ export default function ReportWastePage() {
             <div className="size-6 rounded-md bg-emerald-600 text-white flex items-center justify-center">
               <Trash2 className="size-3.5" />
             </div>
-            <span>Ikere Waste Portal</span>
+            <span>
+              Ikere<span className="text-emerald-600">Waste</span>
+            </span>
           </div>
           <div className="w-16" /> {/* spacer */}
         </div>

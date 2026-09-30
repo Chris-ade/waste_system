@@ -1160,8 +1160,7 @@ export function ReportsClient({
               <div className="p-3 rounded-xl border bg-card space-y-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                    <MapPin className="size-3 text-emerald-600" /> Location
-                    Details
+                    Location Details
                   </span>
                   <a
                     href={`https://www.google.com/maps?q=${viewingReport.latitude},${viewingReport.longitude}`}
@@ -1185,7 +1184,7 @@ export function ReportsClient({
               {/* Description */}
               <div className="p-3 rounded-xl border bg-card space-y-1">
                 <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                  <FileText className="size-3" /> Resident Description
+                  Resident Description
                 </span>
                 <p className="text-foreground leading-relaxed text-[12px] whitespace-pre-wrap">
                   {viewingReport.description ||
@@ -1197,7 +1196,7 @@ export function ReportsClient({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl border bg-card space-y-1.5">
                   <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
-                    <User className="size-3" /> Reporter Details
+                    Reporter Details
                   </span>
                   <div className="font-medium text-foreground text-[13px]">
                     {viewingReport.user?.name || "Anonymous Resident"}
@@ -1224,7 +1223,7 @@ export function ReportsClient({
                 </div>
 
                 <div className="p-3 rounded-xl border bg-card space-y-1.5">
-                  <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+                  <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     <Truck className="size-3" /> Assigned Collection Crew
                   </span>
                   {viewingReport.crewAssigned ? (
