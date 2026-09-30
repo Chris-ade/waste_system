@@ -163,7 +163,7 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              {/* Demo Account Quick-fill for project evaluators */}
+              {/* Demo Account */}
               <div className="w-full pt-2 border-t border-border/50 text-left">
                 <span className="text-[11px] font-semibold text-muted-foreground block mb-2">
                   Quick Demo Accounts:
