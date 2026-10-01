@@ -309,7 +309,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 rounded-2xl border bg-card shadow-xs flex flex-col items-start text-left">
               <div className="flex items-center justify-center rounded-xl text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-bold mb-4">
-                01
+                <MapPin className="size-6" />
               </div>
               <h3 className="text-lg font-bold">Snap & Pin Location</h3>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
@@ -320,7 +320,7 @@ export default async function HomePage() {
 
             <div className="p-6 rounded-2xl border bg-card shadow-xs flex flex-col items-start text-left">
               <div className="flex items-center justify-center rounded-xl text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-bold mb-4">
-                02
+                <Truck className="size-6" />
               </div>
               <h3 className="text-lg font-bold">Dispatch & Crew Assignment</h3>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
@@ -331,7 +331,7 @@ export default async function HomePage() {
 
             <div className="p-6 rounded-2xl border bg-card shadow-xs flex flex-col items-start text-left">
               <div className="flex items-center justify-center rounded-xl text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-bold mb-4">
-                03
+                <Trash2 className="size-6" />
               </div>
               <h3 className="text-lg font-bold">Evacuation & Verification</h3>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
